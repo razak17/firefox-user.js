@@ -38,7 +38,6 @@ user_pref("startup.homepage_override_url", ""); // What's New page after updates
 // WARNINGS
 user_pref("browser.tabs.warnOnClose", false);
 user_pref("browser.tabs.warnOnCloseOtherTabs", false);
-user_pref("browser.tabs.closeWindowWithLastTab", false);
 user_pref("browser.tabs.warnOnOpen", false);
 user_pref("full-screen-api.warning.delay", 0);
 user_pref("full-screen-api.warning.timeout", 0);
@@ -57,6 +56,7 @@ user_pref("layout.spellcheckDefault", 2); // 0=none, 1-multi-line, 2=multi-line 
 // UX BEHAVIOR
 user_pref("browser.backspace_action", 2); // 0=previous page, 1=scroll up, 2=do nothing
 user_pref("browser.quitShortcut.disabled", true); // disable Ctrl-Q quit shortcut [LINUX] [MAC] [FF87+]
+user_pref("browser.tabs.closeWindowWithLastTab", false);
 user_pref("browser.urlbar.decodeURLsOnCopy", true); // see bugzilla 1320061 [FF53+]
 user_pref("general.autoScroll", false); // middle-click enabling auto-scrolling [DEFAULT: false on Linux]
 user_pref("ui.key.menuAccessKey", 0); // disable alt key toggling the menu bar [RESTART]
@@ -73,43 +73,52 @@ user_pref("reader.parse-on-load.enabled", false); // Reader View
 user_pref("browser.safebrowsing.malware.enabled", true);
 user_pref("browser.safebrowsing.phishing.enabled", true);
 user_pref("browser.safebrowsing.downloads.enabled", true);
-
-// Hardware acceleration
-user_pref("browser.preferences.defaultPerformanceSettings.enabled", false);
-user_pref("layers.acceleration.disabled", true);
+user_pref("layers.acceleration.disabled", false);
 
 /*** [SECTION 5000]: OPTIONAL OPSEC ***/
 user_pref("signon.rememberSignons", false);
 user_pref("browser.privatebrowsing.autostart", false);
 user_pref("extensions.formautofill.addresses.usage.hasEntry", false);
 
+/*** [SECTION 1600]: HEADERS / REFERERS ***/
+user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
+
 /** EXTENSIONS ***/
-user_pref("extensions.webextensions.restrictedDomains", "");
+user_pref("extensions.webextensionsrestrictedDomains", "");
 
 /*** [SECTION 0100]: STARTUP ***/
 user_pref("browser.startup.page", 3);
+
+/** SANITIZE ON SHUTDOWN : ALL OR NOTHING ***/
+user_pref("privacy.clearOnShutdown.cookies", false);
+user_pref("privacy.clearOnShutdown.history", false);
+user_pref("privacy.clearOnShutdown.openWindows", false);
+user_pref("privacy.cpd.openWindows", false);
+user_pref("privacy./cpd.history", false);
+user_pref("privacy.cpd.cookies", false);
+
+/*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
+user_pref("network.cookie.lifetimePolicy", 0);
+
+/** MIXED CONTENT ***/
+user_pref("dom.security.https_only_mode", false); // [FF76+]
+
+/*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
+user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
+
+user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.trr.mode", 2);
 user_pref("network.trr.custom_uri", "https://doh.libredns.gr/dns-query");
 user_pref("network.trr.uri", "https://doh.libredns.gr/dns-query");
 
-/*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
-user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
+// Hardware acceleration
+user_pref("browser.preferences.defaultPerformanceSettings.enabled", false);
+user_pref("layers.acceleration.disabled", true);
 
-/**********************************************************************
-  MIXED CONTENT
- *********************************************************************/
 /* 1212: set OCSP fetch failures (non-stapled, see 1211) to hard-fail [SETUP-WEB]  ***/
-// user_pref("security.OCSP.require", false);
-
-/*** [SECTION 4500]: RFP (RESIST FINGERPRINTING) **/
-user_pref("privacy.resistFingerprinting", true); // Cause of light theme bug
-user_pref("privacy.resistFingerprinting.letterboxing", false); // reduced screen size
+user_pref("security.OCSP.require", false);
 
 // Disable firefox suggest (Manually)
 user_pref("browser.urlbar.groupLabels.enabled", false)
-
-/* 4520: disable WebGL (Web Graphics Library)
- * [SETUP-WEB] If you need it then override it. RFP still randomizes canvas for naive scripts ***/
-user_pref("webgl.disabled", false);
