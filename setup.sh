@@ -34,12 +34,16 @@ fi
 config_branch() {
 	profile="$1"
 	mkdir -p "$FIREFOX_HOME/$profile"
+
 	pushd "$HOME/.dots/firefox-user.js" || exit
 	git checkout "$profile"
 	cp -R ./chrome ./user-overrides.js "$FIREFOX_HOME/$profile"
 
 	pushd "$TMP" || exit
 	cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
+
+	pushd "$FIREFOX_HOME/$profile" || exit
+  sh ./updater.sh -d -s -o user-overrides.js
 	echo "Profile '$profile' Completed!"
 }
 
