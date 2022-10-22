@@ -1,6 +1,6 @@
 #!/bin/bash
 export LC_ALL=en_US.UTF-8
-FIREFOX_HOME=$HOME/.mozilla/firefox/profiless
+FIREFOX_HOME=$HOME/.mozilla/firefox/profiles
 TMP="./temp"
 
 # cleaner
