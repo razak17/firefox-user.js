@@ -122,3 +122,12 @@ user_pref("security.OCSP.require", false);
 
 // Disable firefox suggest (Manually)
 user_pref("browser.urlbar.groupLabels.enabled", false)
+
+/* 4520: disable WebGL (Web Graphics Library)
+ * [SETUP-WEB] If you need it then override it. RFP still randomizes canvas for naive scripts ***/
+user_pref("webgl.disabled", false);
+
+// disable promos
+user_pref("browser.vpn_promo.enabled", false);
+user_pref("browser.promo.focus.enabled", false);
+user_pref("browser.promo.pin.enabled", false);
