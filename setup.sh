@@ -10,10 +10,6 @@ mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
 
-if [ ! -d "$HOME/.dots/user.js" ]; then
-	git clone https://github.com/arkenfox/user.js "$HOME/.dots"
-fi
-
 if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
 	echo "User.js file downloaded"
 fi
