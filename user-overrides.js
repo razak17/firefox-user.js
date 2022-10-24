@@ -123,3 +123,8 @@ user_pref("privacy.clearOnShutdown.openWindows", false);
 user_pref("privacy.cpd.openWindows", false);
 user_pref("privacy./cpd.history", false);
 user_pref("privacy.cpd.cookies", false);
+
+// disable promos
+user_pref("browser.vpn_promo.enabled", false);
+user_pref("browser.promo.focus.enabled", false);
+user_pref("browser.promo.pin.enabled", false);
