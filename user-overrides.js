@@ -96,21 +96,22 @@ user_pref("network.trr.uri", "https://doh.libredns.gr/dns-query");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
-
-// Disable firefox suggest (Manually)
 user_pref("browser.urlbar.groupLabels.enabled", false)
-
-user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
 
 // disable promos
 user_pref("browser.vpn_promo.enabled", false);
 user_pref("browser.promo.focus.enabled", false);
 user_pref("browser.promo.pin.enabled", false);
 
+// search engine
+user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
+
+// 1244: enable HTTPS-Only mode in all windows [FF76+]
+user_pref("dom.security.https_only_mode", false); // [FF76+]
+
 /***************************************************************************************************
   MIXED CONTENT
 ***************************************************************************************************/
-user_pref("dom.security.https_only_mode", false); // [FF76+]
 
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
 user_pref("network.cookie.lifetimePolicy", 0);
