@@ -100,12 +100,12 @@ user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 // Disable firefox suggest (Manually)
 user_pref("browser.urlbar.groupLabels.enabled", false)
 
+user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
+
 /**********************************************************************
   MIXED CONTENT
  *********************************************************************/
 user_pref("dom.security.https_only_mode", false); // [FF76+]
-
-user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
 
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
 user_pref("network.cookie.lifetimePolicy", 0);
