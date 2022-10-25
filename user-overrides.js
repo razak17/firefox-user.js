@@ -107,9 +107,9 @@ user_pref("browser.vpn_promo.enabled", false);
 user_pref("browser.promo.focus.enabled", false);
 user_pref("browser.promo.pin.enabled", false);
 
-/**********************************************************************
+/***************************************************************************************************
   MIXED CONTENT
- *********************************************************************/
+***************************************************************************************************/
 user_pref("dom.security.https_only_mode", false); // [FF76+]
 
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
