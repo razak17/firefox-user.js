@@ -96,7 +96,7 @@ user_pref("network.trr.uri", "https://doh.libredns.gr/dns-query");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
-user_pref("browser.urlbar.groupLabels.enabled", false)
+user_pref("browser.urlbar.groupLabels.enabled", false);
 
 // disable promos
 user_pref("browser.vpn_promo.enabled", false);
