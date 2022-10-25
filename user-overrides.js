@@ -102,6 +102,11 @@ user_pref("browser.urlbar.groupLabels.enabled", false)
 
 user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
 
+// disable promos
+user_pref("browser.vpn_promo.enabled", false);
+user_pref("browser.promo.focus.enabled", false);
+user_pref("browser.promo.pin.enabled", false);
+
 /**********************************************************************
   MIXED CONTENT
  *********************************************************************/
@@ -115,8 +120,3 @@ user_pref("privacy.resistFingerprinting.letterboxing", false); // reduced screen
 /* 4520: disable WebGL (Web Graphics Library)
  * [SETUP-WEB] If you need it then override it. RFP still randomizes canvas for naive scripts ***/
 user_pref("webgl.disabled", false);
-
-// disable promos
-user_pref("browser.vpn_promo.enabled", false);
-user_pref("browser.promo.focus.enabled", false);
-user_pref("browser.promo.pin.enabled", false);
