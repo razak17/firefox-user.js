@@ -96,7 +96,7 @@ user_pref("network.trr.uri", "https://doh.libredns.gr/dns-query");
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 
 // Disable firefox suggest (Manually)
-user_pref("browser.urlbar.groupLabels.enabled", false)
+user_pref("browser.urlbar.groupLabels.enabled", false);
 
 // disable promos
 user_pref("browser.vpn_promo.enabled", false);
