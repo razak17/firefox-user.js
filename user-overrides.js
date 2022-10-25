@@ -109,15 +109,15 @@ user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
 // 1244: enable HTTPS-Only mode in all windows [FF76+]
 user_pref("dom.security.https_only_mode", false); // [FF76+]
 
+/* 1212: set OCSP fetch failures (non-stapled, see 1211) to hard-fail [SETUP-WEB]  ***/
+user_pref("security.OCSP.require", false);
+
 /***************************************************************************************************
   MIXED CONTENT
 ***************************************************************************************************/
 
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
 user_pref("network.cookie.lifetimePolicy", 0);
-
-/* 1212: set OCSP fetch failures (non-stapled, see 1211) to hard-fail [SETUP-WEB]  ***/
-user_pref("security.OCSP.require", false);
 
 /*** [SECTION 1600]: HEADERS / REFERERS ***/
 user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
