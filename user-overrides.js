@@ -112,7 +112,6 @@ user_pref("dom.security.https_only_mode", false); // [FF76+]
 /***************************************************************************************************
   MIXED CONTENT
 ***************************************************************************************************/
-user_pref("dom.security.https_only_mode", false); // [FF76+]
 
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
 user_pref("network.cookie.lifetimePolicy", 0);
