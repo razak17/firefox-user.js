@@ -10,22 +10,24 @@ mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
 
-if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
-	echo "User.js file downloaded"
-fi
+install_essentials() {
+	if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
+		echo "User.js file downloaded"
+	fi
 
-if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/updater.sh" -o "${TMP}/updater.sh"; then
-	echo "Update script downloaded"
-fi
+	if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/updater.sh" -o "${TMP}/updater.sh"; then
+		echo "Update script downloaded"
+	fi
 
-if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/prefsCleaner.sh" -o "${TMP}/prefsCleaner.sh"; then
-	echo "prefsCleaner script downloaded"
-fi
+	if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/prefsCleaner.sh" -o "${TMP}/prefsCleaner.sh"; then
+		echo "prefsCleaner script downloaded"
+	fi
 
-if [ ! -e "$TMP/updater.sh" ] || [ ! -e "$TMP/prefsCleaner.sh" ]; then
-	echo "Error downloading scripts"
-	exit 1
-fi
+	if [ ! -e "$TMP/updater.sh" ] || [ ! -e "$TMP/prefsCleaner.sh" ]; then
+		echo "Error downloading scripts"
+		exit 1
+	fi
+}
 
 config_branch() {
 	profile="$1"
@@ -39,8 +41,17 @@ config_branch() {
 	cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
 
 	pushd "$FIREFOX_HOME/$profile" || exit
-  sh ./updater.sh -d -s -o user.js-overrides
+	sh ./updater.sh -d -s -o user.js-overrides
 	echo "Profile '$profile' Completed!"
+}
+
+clone_config() {
+	if [ ! -d "$HOME/.dots/firefox-user.js" ]; then
+		echo "Cloning firefox-user.js"
+		git clone https://github.com/razak17/firefox-user.js "$HOME"/.dots/firefox-user.js
+	else
+		echo "Remove '$HOME/.dots/firefox-user.js' and run again"
+	fi
 }
 
 while [ "$#" -gt 0 ]; do
@@ -48,11 +59,13 @@ while [ "$#" -gt 0 ]; do
 	shift
 
 	case "$curr" in
-	-main) config_branch "main" ;;
-	-dev) config_branch "dev" ;;
-	-coding) config_branch "coding" ;;
-	-rec) config_branch "rec" ;;
+	-install) clone_config ;;
+	-main) install_essentials config_branch "main" ;;
+	-dev) install_essentials config_branch "dev" ;;
+	-coding) install_essentials config_branch "coding" ;;
+	-rec) install_essentials config_branch "rec" ;;
 	-all)
+		install_essentials
 		config_branch "main"
 		config_branch "dev"
 		config_branch "coding"
