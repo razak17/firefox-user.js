@@ -33,13 +33,13 @@ config_branch() {
 
 	pushd "$HOME/.dots/firefox-user.js" || exit
 	git checkout "$profile"
-	cp -R ./chrome ./user-overrides.js "$FIREFOX_HOME/$profile"
+	cp -R ./chrome ./user.js-overrides "$FIREFOX_HOME/$profile"
 
 	pushd "$TMP" || exit
 	cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
 
 	pushd "$FIREFOX_HOME/$profile" || exit
-  sh ./updater.sh -d -s -o user-overrides.js
+  sh ./updater.sh -d -s -o user.js-overrides
 	echo "Profile '$profile' Completed!"
 }
 
