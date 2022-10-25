@@ -107,9 +107,9 @@ user_pref("browser.vpn_promo.enabled", false);
 user_pref("browser.promo.focus.enabled", false);
 user_pref("browser.promo.pin.enabled", false);
 
-/**********************************************************************
+/***************************************************************************************************
   MIXED CONTENT
- *********************************************************************/
+***************************************************************************************************/
 /* 1212: set OCSP fetch failures (non-stapled, see 1211) to hard-fail [SETUP-WEB]  ***/
 // user_pref("security.OCSP.require", false);
 
