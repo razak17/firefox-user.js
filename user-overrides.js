@@ -35,6 +35,9 @@ user_pref("startup.homepage_welcome_url", "");
 user_pref("startup.homepage_welcome_url.additional", "");
 user_pref("startup.homepage_override_url", ""); // What's New page after updates
 
+/*** [SECTION 0100]: STARTUP ***/
+user_pref("browser.startup.page", 3);
+
 // WARNINGS
 user_pref("browser.tabs.warnOnClose", false);
 user_pref("browser.tabs.warnOnCloseOtherTabs", false);
@@ -73,21 +76,50 @@ user_pref("reader.parse-on-load.enabled", false); // Reader View
 user_pref("browser.safebrowsing.malware.enabled", true);
 user_pref("browser.safebrowsing.phishing.enabled", true);
 user_pref("browser.safebrowsing.downloads.enabled", true);
-user_pref("layers.acceleration.disabled", false);
+
+// Hardware acceleration
+user_pref("browser.preferences.defaultPerformanceSettings.enabled", false);
+user_pref("layers.acceleration.disabled", true);
 
 /*** [SECTION 5000]: OPTIONAL OPSEC ***/
 user_pref("signon.rememberSignons", false);
 user_pref("browser.privatebrowsing.autostart", false);
 user_pref("extensions.formautofill.addresses.usage.hasEntry", false);
 
-/*** [SECTION 1600]: HEADERS / REFERERS ***/
-user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
-
 /** EXTENSIONS ***/
 user_pref("extensions.webextensions.restrictedDomains", "");
 
-/*** [SECTION 0100]: STARTUP ***/
-user_pref("browser.startup.page", 3);
+/*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
+user_pref("network.trr.mode", 2);
+user_pref("network.trr.custom_uri", "https://doh.libredns.gr/ads");
+user_pref("network.trr.uri", "https://doh.libredns.gr/ads");
+user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
+
+// Disable firefox suggest (Manually)
+user_pref("browser.urlbar.groupLabels.enabled", false);
+
+// disable promos
+user_pref("browser.vpn_promo.enabled", false);
+user_pref("browser.promo.focus.enabled", false);
+user_pref("browser.promo.pin.enabled", false);
+
+// search engine
+user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
+
+// 1244: enable HTTPS-Only mode in all windows [FF76+]
+user_pref("dom.security.https_only_mode", false); // [FF76+]
+//
+/* 1212: set OCSP fetch failures (non-stapled, see 1211) to hard-fail [SETUP-WEB]  ***/
+user_pref("security.OCSP.require", false);
+
+/***************************************************************************************************
+  MIXED CONTENT
+***************************************************************************************************/
+/*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
+user_pref("network.cookie.lifetimePolicy", 0);
+
+/*** [SECTION 1600]: HEADERS / REFERERS ***/
+user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);
 
 /** SANITIZE ON SHUTDOWN : ALL OR NOTHING ***/
 user_pref("privacy.clearOnShutdown.cookies", false);
@@ -96,31 +128,6 @@ user_pref("privacy.clearOnShutdown.openWindows", false);
 user_pref("privacy.cpd.openWindows", false);
 user_pref("privacy.cpd.history", false);
 user_pref("privacy.cpd.cookies", false);
-
-/*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
-user_pref("network.cookie.lifetimePolicy", 0);
-
-/** MIXED CONTENT ***/
-user_pref("dom.security.https_only_mode", false); // [FF76+]
-
-/*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
-user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
-
-user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
-
-/*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
-user_pref("network.trr.mode", 2);
-user_pref("network.trr.custom_uri", "https://doh.libredns.gr/ads");
-user_pref("network.trr.uri", "https://doh.libredns.gr/ads");
-
-// Hardware acceleration
-user_pref("browser.preferences.defaultPerformanceSettings.enabled", false);
-user_pref("layers.acceleration.disabled", true);
-
-/* 1212: set OCSP fetch failures (non-stapled, see 1211) to hard-fail [SETUP-WEB]  ***/
-user_pref("security.OCSP.require", false);
-
-user_pref("browser.urlbar.groupLabels.enabled", false) // manually set again after running updater.sh
 
 /* 1601: control when to send a cross-origin referer
  * 0=always (default), 1=only if base domains match, 2=only if hosts match
@@ -135,8 +142,3 @@ user_pref("network.http.referer.XOriginPolicy", 0); // manually set again after 
  * [TEST] https://bitmovin.com/demos/drm
  * [1] https://www.eff.org/deeplinks/2017/10/drms-dead-canary-how-we-just-lost-web-what-we-learned-it-and-what-we-need-do-next ***/
 user_pref("media.eme.enabled", true);
-
-// disable promos
-user_pref("browser.vpn_promo.enabled", false);
-user_pref("browser.promo.focus.enabled", false);
-user_pref("browser.promo.pin.enabled", false);
