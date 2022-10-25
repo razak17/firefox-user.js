@@ -97,6 +97,11 @@ user_pref("network.trr.uri", "https://doh.libredns.gr/dns-query");
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 
+// Disable firefox suggest (Manually)
+user_pref("browser.urlbar.groupLabels.enabled", false)
+
+user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
+
 /**********************************************************************
   MIXED CONTENT
  *********************************************************************/
@@ -106,9 +111,6 @@ user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 /*** [SECTION 4500]: RFP (RESIST FINGERPRINTING) **/
 user_pref("privacy.resistFingerprinting", true); // Cause of light theme bug
 user_pref("privacy.resistFingerprinting.letterboxing", false); // reduced screen size
-
-// Disable firefox suggest (Manually)
-user_pref("browser.urlbar.groupLabels.enabled", false)
 
 /* 4520: disable WebGL (Web Graphics Library)
  * [SETUP-WEB] If you need it then override it. RFP still randomizes canvas for naive scripts ***/
