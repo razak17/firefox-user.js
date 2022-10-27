@@ -29,6 +29,15 @@ install_essentials() {
 	fi
 }
 
+clone_config() {
+	if [ ! -d "$HOME/.dots/firefox-user.js" ]; then
+		echo "Cloning firefox-user.js"
+		git clone https://github.com/razak17/firefox-user.js "$HOME"/.dots/firefox-user.js
+	else
+		echo "Remove '$HOME/.dots/firefox-user.js' and run again"
+	fi
+}
+
 config_branch() {
 	profile="$1"
 	mkdir -p "$FIREFOX_HOME/$profile"
@@ -45,27 +54,18 @@ config_branch() {
 	echo "Profile '$profile' Completed!"
 }
 
-clone_config() {
-	if [ ! -d "$HOME/.dots/firefox-user.js" ]; then
-		echo "Cloning firefox-user.js"
-		git clone https://github.com/razak17/firefox-user.js "$HOME"/.dots/firefox-user.js
-	else
-		echo "Remove '$HOME/.dots/firefox-user.js' and run again"
-	fi
-}
-
 while [ "$#" -gt 0 ]; do
 	curr=$1
 	shift
 
 	case "$curr" in
 	-install) clone_config ;;
-	-main) install_essentials config_branch "main" ;;
-	-dev) install_essentials config_branch "dev" ;;
-	-coding) install_essentials config_branch "coding" ;;
-	-rec) install_essentials config_branch "rec" ;;
+	-main) install_essentials && config_branch "main" ;;
+	-dev) install_essentials && config_branch "dev" ;;
+	-coding) install_essentials && config_branch "coding" ;;
+	-rec) install_essentials && config_branch "rec" ;;
 	-all)
-		install_essentials
+		install_essentials &&
 		config_branch "main"
 		config_branch "dev"
 		config_branch "coding"
