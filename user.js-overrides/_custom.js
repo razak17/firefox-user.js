@@ -3,7 +3,7 @@
 ***************************************************************************************************/
 
 /*** [SECTION 4500]: RFP (RESIST FINGERPRINTING) **/
-user_pref("privacy.resistFingerprinting", true); // Cause of light theme bug
+user_pref("privacy.resistFingerprinting", false); // Cause of light theme bug
 user_pref("privacy.resistFingerprinting.letterboxing", false); // reduced screen size
 
 /* 4520: disable WebGL (Web Graphics Library)
