@@ -4,7 +4,7 @@ See the above repository for updates as well as full license text. */
 /* Small changes to make proton roughly as compact as the old compact mode */
 
 :root{
-  --toolbarbutton-inner-padding: 6px !important;
+  --toolbarbutton-inner-padding: 3px 6px !important;
   --tab-block-margin: 2px !important;
   --tabs-shadow-size: 0px !important;
   --arrowpanel-menuitem-padding-block: 5px !important;
