@@ -4,23 +4,29 @@ FIREFOX_HOME=$HOME/.mozilla/firefox/profiles
 TMP="./temp"
 
 # cleaner
-rm -rf "${TMP}"
+# rm -rf "${TMP}"
 
 mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
 
 install_essentials() {
-	if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
-		echo "User.js file downloaded"
+	if [ ! -e "$TMP/user.js" ]; then
+		if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
+			echo "User.js file downloaded"
+		fi
 	fi
 
-	if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/updater.sh" -o "${TMP}/updater.sh"; then
-		echo "Update script downloaded"
+	if [ ! -e "$TMP/updater.sh" ]; then
+		if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/updater.sh" -o "${TMP}/updater.sh"; then
+			echo "Update script downloaded"
+		fi
 	fi
 
-	if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/prefsCleaner.sh" -o "${TMP}/prefsCleaner.sh"; then
-		echo "prefsCleaner script downloaded"
+	if [ ! -e "$TMP/prefsCleaner.sh" ]; then
+		if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/prefsCleaner.sh" -o "${TMP}/prefsCleaner.sh"; then
+			echo "prefsCleaner script downloaded"
+		fi
 	fi
 
 	if [ ! -e "$TMP/updater.sh" ] || [ ! -e "$TMP/prefsCleaner.sh" ] || [ ! -e "$TMP/user.js" ]; then
