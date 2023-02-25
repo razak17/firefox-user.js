@@ -23,7 +23,7 @@ install_essentials() {
 		echo "prefsCleaner script downloaded"
 	fi
 
-	if [ ! -e "$TMP/updater.sh" ] || [ ! -e "$TMP/prefsCleaner.sh" ]; then
+	if [ ! -e "$TMP/updater.sh" ] || [ ! -e "$TMP/prefsCleaner.sh" ] || [ ! -e "$TMP/user.js" ]; then
 		echo "Error downloading scripts"
 		exit 1
 	fi
@@ -66,7 +66,7 @@ while [ "$#" -gt 0 ]; do
 	-rec) install_essentials && config_branch "rec" ;;
 	-all)
 		install_essentials &&
-		config_branch "main"
+			config_branch "main"
 		config_branch "dev"
 		config_branch "coding"
 		config_branch "rec"
