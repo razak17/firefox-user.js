@@ -91,8 +91,8 @@ user_pref("extensions.webextensionsrestrictedDomains", "");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.trr.mode", 2);
-user_pref("network.trr.custom_uri", "https://doh.libredns.gr/dns-query");
-user_pref("network.trr.uri", "https://doh.libredns.gr/dns-query");
+user_pref("network.trr.custom_uri", "https://doh-ch.blahdns.com/dns-query");
+user_pref("network.trr.uri", "https://doh-ch.blahdns.com/dns-query");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
