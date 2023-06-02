@@ -72,10 +72,10 @@ while [ "$#" -gt 0 ]; do
 	-rec) install_essentials && config_branch "rec" ;;
 	-all)
 		install_essentials &&
-			config_branch "main"
-		config_branch "dev"
-		config_branch "coding"
-		config_branch "rec"
+			config_branch "main" &&
+			config_branch "dev" &&
+			config_branch "coding" &&
+			config_branch "rec"
 		;;
 	*) echo "Unavailable command... $curr" ;;
 	esac
