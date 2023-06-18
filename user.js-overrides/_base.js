@@ -106,6 +106,9 @@ user_pref("browser.promo.pin.enabled", false);
 // search engine
 user_pref("key.url", "https://html.duckduckgo.com/html?q=\\");
 
+// css selector
+user_pref("layout.css.has-selector.enabled", true);
+
 // 1244: enable HTTPS-Only mode in all windows [FF76+]
 user_pref("dom.security.https_only_mode", false); // [FF76+]
 
