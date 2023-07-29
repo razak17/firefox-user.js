@@ -1,6 +1,7 @@
 /* Personal Firefox settings. Based by arkenfox/user.js      */
 /* by Denis G. (https://github.com/denis-g/firefox-settings) */
 
+@import "ui/compact_proton.css";
 @import "ui/auto_hide_bookmarks_toolbar.css";
 @import "ui/close_tab_button_shown_on_hover.css";
 @import "ui/compact_list_menu.css";
@@ -14,7 +15,6 @@
 /* Loading Indicator */
 @import "ui/loading_indicator_bouncing_line.css";
 @import "ui/tab_line_loading_indicator.css";
-@import "ui/compact_proton.css";
 @import "ui/floating_findbar_on_top.css";
 @import "ui/tab_closing_animation.css";
 @import "ui/icon_only_tabs.css";

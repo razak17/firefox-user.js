@@ -13,7 +13,7 @@ See the above repository for updates as well as full license text. */
   flex-grow: 0 !important;
 }
 
-.tabbrowser-tab[fadein]{ min-width: calc(16px + 2 * 10px + 4px) !important; }
+.tabbrowser-tab[fadein]{ min-width: calc(26px + 2 * 10px + 6px) !important; }
 :root[uidensity="compact"] .tabbrowser-tab[fadein]{
   min-width: calc(16px + 2 * var(--inline-tab-padding,0px) + 4px) !important;
 }
