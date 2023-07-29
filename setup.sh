@@ -63,7 +63,11 @@ config_branch() {
     mv "$FIREFOX_HOME/$profile/user.js-overrides" "$FIREFOX_HOME/$profile/user.js-overrides-$(date +%F_%H%M%S_%N)"
   fi
   mkdir -p "$FIREFOX_HOME/$profile/user.js-overrides"
-	cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-$profile/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  if [ "$profile" == "coding" ] || [ "$profile" == "rec" ] || [ "$profile" == "dev" ] || [ "$profile" == "main" ]; then
+	  cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-$profile/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  else
+	  cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-coding/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  fi
 
 	pushd "$TMP" || exit
 	cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
