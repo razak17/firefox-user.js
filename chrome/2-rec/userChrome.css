@@ -6,6 +6,10 @@
 @import "ui/classic_grid_main_menu_popup.css";
 */
 @import "ui/close-tab-button-shown-on-hover.css";
+@import "ui/tab_closing_animation.css";
+@import "ui/icon_only_tabs.css";
+@import "ui/shrinking_pinned_tabs.css";
+@import "ui/tabs_fill_available_width.css";
 
 /* Compact */
 @import "ui/compact_list_menu.css";

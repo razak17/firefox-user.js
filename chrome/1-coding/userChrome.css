@@ -17,4 +17,6 @@
 @import "ui/compact_proton.css";
 @import "ui/floating_findbar_on_top.css";
 @import "ui/tab_closing_animation.css";
-/* @import "ui/auto_hide_navigation_button.css"; */
+@import "ui/icon_only_tabs.css";
+@import "ui/shrinking_pinned_tabs.css";
+@import "ui/tabs_fill_available_width.css";
