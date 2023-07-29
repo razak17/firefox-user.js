@@ -40,4 +40,4 @@ user_pref("browser.preferences.moreFromMozilla", false);
 user_pref("browser.preferences.experimental", true);
 
 // for correct styles `chrome/ui/floating-findbar-on-top.css`
-user_pref("browser.toolbars.bookmarks.visibility", "always");
+// user_pref("browser.toolbars.bookmarks.visibility", "always");

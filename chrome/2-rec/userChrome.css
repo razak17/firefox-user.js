@@ -3,14 +3,14 @@
 
 /* Main */
 /* @import 'ui/color_variable_template.css';
-@import 'ui/theme_color_variables.css';
 @import "ui/classic_grid_main_menu_popup.css";
 */
 @import "ui/close-tab-button-shown-on-hover.css";
 
 /* Compact */
-@import "ui/compact-list-menu.css";
+@import "ui/compact_list_menu.css";
 @import "ui/compact_proton.css";
+@import 'ui/floating_findbar_on_top.css';
 
 /* Dark  */
 @import "ui/dark_additional_windows.css";

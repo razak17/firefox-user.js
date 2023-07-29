@@ -1,18 +1,20 @@
 /* Personal Firefox settings. Based by arkenfox/user.js      */
 /* by Denis G. (https://github.com/denis-g/firefox-settings) */
 
-@import 'ui/auto-hide-bookmarks-toolbar.css';
-@import 'ui/close-tab-button-shown-on-hover.css';
-@import 'ui/compact-list-menu.css';
-@import 'ui/hide-on-urlbar-this-time.css';
-@import 'ui/urlbar_container_color_border.css';
+@import "ui/auto_hide_bookmarks_toolbar.css";
+@import "ui/close_tab_button_shown_on_hover.css";
+@import "ui/compact_list_menu.css";
+@import "ui/hide_on_urlbar_this_time.css";
+@import "ui/urlbar_container_color_border.css";
 
 /* Icons */
-@import 'ui/iconized-main-menu.css';
-@import 'ui/minimal-ui-scrollbars.css';
+@import "ui/iconized_main_menu.css";
+@import "ui/minimal_ui_scrollbars.css";
 
 /* Loading Indicator */
-@import 'ui/loading_indicator_bouncing_line.css';
-@import 'ui/tab_line_loading_indicator.css';
-@import 'ui/compact_proton.css';
-@import 'ui/floating-findbar-on-top.css';
+@import "ui/loading_indicator_bouncing_line.css";
+@import "ui/tab_line_loading_indicator.css";
+@import "ui/compact_proton.css";
+@import "ui/floating_findbar_on_top.css";
+@import "ui/tab_closing_animation.css";
+/* @import "ui/auto_hide_navigation_button.css"; */
