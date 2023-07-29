@@ -49,8 +49,21 @@ config_branch() {
 	mkdir -p "$FIREFOX_HOME/$profile"
 
 	pushd "$HOME/.dots/firefox-user.js" || exit
-	git checkout "$profile"
-	cp -R ./chrome ./user.js-overrides "$FIREFOX_HOME/$profile"
+  if [ -d "$FIREFOX_HOME/$profile/chrome" ]; then
+    mv "$FIREFOX_HOME/$profile/chrome" "$FIREFOX_HOME/$profile/chrome-$(date +%F_%H%M%S_%N)"
+  fi
+  mkdir -p "$FIREFOX_HOME/$profile/chrome"
+  if [ "$profile" == "rec" ]; then
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-$profile/* "$FIREFOX_HOME/$profile/chrome"
+  else
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$FIREFOX_HOME/$profile/chrome"
+  fi
+
+  if [ -d "$FIREFOX_HOME/$profile/user.js-overrides" ]; then
+    mv "$FIREFOX_HOME/$profile/user.js-overrides" "$FIREFOX_HOME/$profile/user.js-overrides-$(date +%F_%H%M%S_%N)"
+  fi
+  mkdir -p "$FIREFOX_HOME/$profile/user.js-overrides"
+	cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-$profile/* "$FIREFOX_HOME/$profile/user.js-overrides"
 
 	pushd "$TMP" || exit
 	cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
@@ -64,14 +77,14 @@ while [ "$#" -gt 0 ]; do
 	curr=$1
 	shift
 
+  install_essentials
 	case "$curr" in
 	-install) clone_config ;;
-	-main) install_essentials && config_branch "main" ;;
-	-dev) install_essentials && config_branch "dev" ;;
-	-coding) install_essentials && config_branch "coding" ;;
-	-rec) install_essentials && config_branch "rec" ;;
+	-main) config_branch "main" ;;
+	-dev) config_branch "dev" ;;
+	-coding) config_branch "coding" ;;
+	-rec) config_branch "rec" ;;
 	-all)
-		install_essentials &&
 			config_branch "main" &&
 			config_branch "dev" &&
 			config_branch "coding" &&
