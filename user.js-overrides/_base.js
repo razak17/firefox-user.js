@@ -176,3 +176,6 @@ user_pref("browser.cache.memory.max_entry_size", 153600);
 // use bigger packets
 user_pref("network.buffer.cache.size", 262144);
 user_pref("network.buffer.cache.count", 128);
+
+// enable css has selector
+user_pref("layout.css.has-selector.enabled", true);
