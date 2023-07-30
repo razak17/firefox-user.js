@@ -6,7 +6,6 @@ See the above repository for updates as well as full license text. */
 }
 .tab-icon-image:not([src]){
   display: block !important;
-  padding-right: 8px
 }
 .tab-icon-stack > *{ margin-inline: 0 !important; }
 .tabbrowser-tab{
@@ -14,7 +13,8 @@ See the above repository for updates as well as full license text. */
   flex-grow: 0 !important;
 }
 
-.tabbrowser-tab[fadein]{ min-width: calc(26px + 2 * 10px + 18px) !important; }
+.tabbrowser-tab[fadein]{ min-width: calc(16px + 2 * 10px + 4px) !important; }
+.tabbrowser-tab[fadein]:not([pinned]):hover{ min-width: calc(26px + 2 * 10px + 14px) !important; }
 :root[uidensity="compact"] .tabbrowser-tab[fadein]{
   min-width: calc(16px + 2 * var(--inline-tab-padding,0px) + 4px) !important;
 }
