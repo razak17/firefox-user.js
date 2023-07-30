@@ -54,7 +54,7 @@ config_branch() {
   fi
   mkdir -p "$FIREFOX_HOME/$profile/chrome"
   if [ "$profile" == "rec" ]; then
-    cp -R ./chrome/ui ./chrome/content ./chrome/*-$profile/* "$FIREFOX_HOME/$profile/chrome"
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-"$profile"/* "$FIREFOX_HOME/$profile/chrome"
   else
     cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$FIREFOX_HOME/$profile/chrome"
   fi
@@ -64,7 +64,7 @@ config_branch() {
   fi
   mkdir -p "$FIREFOX_HOME/$profile/user.js-overrides"
   if [ "$profile" == "coding" ] || [ "$profile" == "rec" ] || [ "$profile" == "dev" ] || [ "$profile" == "main" ]; then
-	  cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-$profile/* "$FIREFOX_HOME/$profile/user.js-overrides"
+	  cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$profile"/* "$FIREFOX_HOME/$profile/user.js-overrides"
   else
 	  cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-coding/* "$FIREFOX_HOME/$profile/user.js-overrides"
   fi
