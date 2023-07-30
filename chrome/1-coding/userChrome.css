@@ -2,19 +2,26 @@
 /* by Denis G. (https://github.com/denis-g/firefox-settings) */
 
 @import "ui/compact_proton.css";
+@import "ui/compact_list_menu.css";
 @import "ui/auto_hide_bookmarks_toolbar.css";
 @import "ui/close_tab_button_shown_on_hover.css";
-@import "ui/compact_list_menu.css";
 @import "ui/hide_on_urlbar_this_time.css";
 @import "ui/urlbar_container_color_border.css";
+@import "ui/urlbar_popup_full_width.css";
 
 /* Icons */
 @import "ui/iconized_main_menu.css";
+@import "ui/iconized_menubar_items.css";
+
+/* Scrollbar */
+@import "ui/hide_tabs_scrollbuttons.css";
 @import "ui/minimal_ui_scrollbars.css";
 
 /* Loading Indicator */
 @import "ui/loading_indicator_bouncing_line.css";
 @import "ui/tab_line_loading_indicator.css";
+
+/* Others */
 @import "ui/floating_findbar_on_top.css";
 @import "ui/tab_closing_animation.css";
 @import "ui/icon_only_tabs.css";
