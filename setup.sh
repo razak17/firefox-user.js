@@ -93,7 +93,9 @@ while [ "$#" -gt 0 ]; do
 		config_branch "main" &&
 			config_branch "dev" &&
 			config_branch "coding" &&
-			config_branch "rec"
+			config_branch "rec" &&
+      config_branch "finance" &&
+      echo "All profiles completed!"
 		;;
 	*) echo "Unavailable command... $curr" ;;
 	esac
