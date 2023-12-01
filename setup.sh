@@ -65,6 +65,8 @@ config_branch() {
 	mkdir -p "$FIREFOX_HOME/$profile/user.js-overrides"
 	if [ "$profile" == "coding" ] || [ "$profile" == "rec" ] || [ "$profile" == "dev" ] || [ "$profile" == "main" ] || [ "$profile" == "rgt" ]; then
 		cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$profile"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  elif [ "$profile" == "social" ]; then
+		cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-dev/* "$FIREFOX_HOME/$profile/user.js-overrides"
 	else
 		cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-coding/* "$FIREFOX_HOME/$profile/user.js-overrides"
 	fi
@@ -88,13 +90,12 @@ while [ "$#" -gt 0 ]; do
 	-dev) config_branch "dev" ;;
 	-coding) config_branch "coding" ;;
 	-rec) config_branch "rec" ;;
-	-fin) config_branch "finance" ;;
+	-social) config_branch "social" ;;
 	-all)
 		config_branch "main" &&
 			config_branch "dev" &&
 			config_branch "coding" &&
 			config_branch "rec" &&
-      config_branch "finance" &&
       echo "All profiles completed!"
 		;;
 	*) echo "Unavailable command... $curr" ;;

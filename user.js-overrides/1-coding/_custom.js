@@ -22,22 +22,3 @@ user_pref("privacy.cpd.cookies", false);
 // disable web extension restrictions (Bitwarden, 1Password, etc)
 user_pref("privacy.resistFingerprinting.block_mozAddonManager", false);
 user_pref("extensions.webextensions.restrictedDomains", "");
-
-// increase the absolute number of HTTP connections
-user_pref("network.http.max-connections", 1800);
-user_pref("network.http.max-persistent-connections-per-server", 10);
-
-// increase TLS token caching
-user_pref("network.ssl_tokens_cache_capacity", 32768);
-
-// display tab dropdown when there are too many tabs
-user_pref("browser.tabs.tabmanager.enabled", false);
-
-// hide "More from Mozilla" from settings
-user_pref("browser.preferences.moreFromMozilla", false);
-
-// show "Firefox Experiments" on settings
-user_pref("browser.preferences.experimental", true);
-
-// for correct styles `chrome/ui/floating-findbar-on-top.css`
-// user_pref("browser.toolbars.bookmarks.visibility", "always");
