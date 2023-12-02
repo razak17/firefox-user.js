@@ -198,3 +198,6 @@ user_pref("browser.preferences.experimental", true);
 
 // for correct styles `chrome/ui/floating-findbar-on-top.css`
 // user_pref("browser.toolbars.bookmarks.visibility", "always");
+
+// disable firefox view
+user_pref("browser.tabs.firefox-view", false);
