@@ -2,19 +2,20 @@
 See the above repository for updates as well as full license text. */
 
 .tab-content > :not(.tab-icon-stack){
-  display: none
+  /* display: none */
 }
 .tab-icon-image:not([src]){
   display: block !important;
 }
-.tab-icon-stack > *{ margin-inline: 0 !important; }
+/* .tab-icon-stack > *{ margin-inline: 0 !important; } */
 .tabbrowser-tab{
   -moz-box-flex: 0 !important; /* Fx <112 compatibility */
   flex-grow: 0 !important;
 }
 
 .tabbrowser-tab[fadein]{ min-width: calc(16px + 2 * 10px + 4px) !important; }
-.tabbrowser-tab[fadein]:not([pinned]):hover{ min-width: calc(26px + 2 * 11px + 14px) !important; }
+.tabbrowser-tab[fadein]:not([pinned]){ min-width: calc(16px + 2 * 32px + 4px) !important; }
+/* .tabbrowser-tab[fadein]:not([pinned]):hover{ min-width: calc(26px + 2 * 11px + 14px) !important; } */
 :root[uidensity="compact"] .tabbrowser-tab[fadein]{
   min-width: calc(16px + 2 * var(--inline-tab-padding,0px) + 4px) !important;
 }

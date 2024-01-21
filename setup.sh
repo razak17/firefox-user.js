@@ -86,10 +86,11 @@ while [ "$#" -gt 0 ]; do
 	install_essentials
 	case "$curr" in
 	-install) clone_config ;;
-	-main) config_branch "main" ;;
+  -coding) config_branch "coding" ;;
 	-dev) config_branch "dev" ;;
-	-coding) config_branch "coding" ;;
+  -main) config_branch "main" ;;
 	-rec) config_branch "rec" ;;
+	-rgt) config_branch "rgt" ;;
 	-social) config_branch "social" ;;
 	-all)
 		config_branch "main" &&
