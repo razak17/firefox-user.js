@@ -26,3 +26,10 @@ user_pref("extensions.webextensions.restrictedDomains", "");
 /* 4520: disable WebGL (Web Graphics Library)
  * [SETUP-WEB] If you need it then override it. RFP still randomizes canvas for naive scripts ***/
 user_pref("webgl.disabled", false);
+
+/* 4501: enable privacy.resistFingerprinting
+ * [SETUP-WEB] RFP can cause some website breakage: mainly canvas, use a site exception via the urlbar
+ * RFP also has a few side effects: mainly timezone is UTC0, and websites will prefer light theme
+ * [NOTE] pbmode applies if true and the original pref is false
+ * [1] https://bugzilla.mozilla.org/418986 ***/
+user_pref("privacy.resistFingerprinting", false); // [FF41+]
