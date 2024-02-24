@@ -105,9 +105,9 @@ user_pref("extensions.formautofill.addresses.usage.hasEntry", false);
 user_pref("extensions.webextensions.restrictedDomains", "");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
-user_pref("network.trr.mode", 2);
-user_pref("network.trr.custom_uri", "https://doh-ch.blahdns.com/dns-query");
-user_pref("network.trr.uri", "https://doh-ch.blahdns.com/dns-query");
+user_pref("network.trr.mode", 3);
+user_pref("network.trr.custom_uri", "https://dns.quad9.net/dns-query");
+user_pref("network.trr.uri", "https://dns.quad9.net/dns-query");
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 
 // Disable firefox suggest (Manually)
