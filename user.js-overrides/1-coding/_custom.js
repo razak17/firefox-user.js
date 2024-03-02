@@ -20,5 +20,5 @@ user_pref("privacy.cpd.history", false);
 user_pref("privacy.cpd.cookies", false);
 
 // disable web extension restrictions (Bitwarden, 1Password, etc)
-user_pref("privacy.resistFingerprinting.block_mozAddonManager", false);
+user_pref("privacy.resistFingerprinting.block_mozAddonManager", true);
 user_pref("extensions.webextensions.restrictedDomains", "");
