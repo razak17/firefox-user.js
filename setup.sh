@@ -97,10 +97,10 @@ config_profile() {
 	done
 
 	if [ -z "$config" ]; then
-		echo "Config not found... Do you want to use default config (main)? [y/n]"
+		echo "Config not specified... Do you want to use default config (coding)? [y/n]"
 		read -r ans
 		if [ "$ans" == "y" ]; then
-			config="main"
+			config="coding"
 			echo "Using default config: $config"
 		else
 			echo "Exiting..."
@@ -130,10 +130,10 @@ while [ "$#" -gt 0 ]; do
 		mkdir -p "$HOME/.local/bin"
 		if [ -e "$HOME/.local/bin/fuj" ]; then
 			echo "fuj already exists in $HOME/.local/bin"
-      exit 1
+			exit 1
 		fi
-    ln -s "$HOME/.dots/firefox-user.js/setup.sh" "$HOME/.local/bin/fuj"
-    echo "Installed 'fuj' command"
+		ln -s "$HOME/.dots/firefox-user.js/setup.sh" "$HOME/.local/bin/fuj"
+		echo "Installed 'fuj' command"
 		;;
 	-new)
 		profile=$1
@@ -145,7 +145,8 @@ while [ "$#" -gt 0 ]; do
 		if [ -n "$config" ]; then
 			shift
 		fi
-		config_profile "$profile" "$config"
+		firefox -CreateProfile "${profile^} /home/razak/.mozilla/firefox/profiles/${profile,,}"
+		config_profile "${profile,,}" "${config,,}"
 		;;
 	-coding) config_profile "coding" ;;
 	-dev) config_profile "dev" ;;
