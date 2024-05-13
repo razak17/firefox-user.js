@@ -45,6 +45,8 @@ clone_config() {
 }
 
 setup() {
+	install_essentials
+
 	profile="$1"
 	config="$2"
 
@@ -119,11 +121,46 @@ config_profile() {
 	echo "Invalid config: $config"
 }
 
+capitalize() {
+	word="$1"
+	echo "$(tr '[:lower:]' '[:upper:]' <<<"${word:0:1}")${word:1}"
+}
+
+get_profiles() {
+	cd "$FIREFOX_HOME" || exit
+	options=$(dir | xargs -n 1 -P 1 echo "$0" | awk '{print $2}')
+	choice="$(echo "$options" | dmenu -l 10 -p 'Choose :')"
+	# echo "$choice"
+
+	if [ -z "$choice" ]; then
+		# notify-send -u critical -t 2000 "Firefox Profiles" "nothing selected!"
+		exit 1
+	fi
+
+	# Use a for loop to iterate over the space-separated elements
+	profile_exists=false
+	for element in $options; do
+		if [ "$element" = "$choice" ]; then
+			# echo "Found $element"
+			profile_exists=true
+			break
+		fi
+	done
+
+	if [ "$profile_exists" = false ]; then
+		notify-send -u critical -t 2000 "Firefox Profiles" "That profile does not exist"
+		exit 1
+	fi
+
+	notify-send -t 2000 "Firefox profiles" "Opening $choice profile..."
+	profile=$(capitalize "$choice")
+	firefox -P "${profile}"
+}
+
 while [ "$#" -gt 0 ]; do
 	curr=$1
 	shift
 
-	install_essentials
 	case "$curr" in
 	-clone) clone_config ;;
 	-install)
@@ -147,6 +184,9 @@ while [ "$#" -gt 0 ]; do
 		fi
 		firefox -CreateProfile "${profile^} /home/razak/.mozilla/firefox/profiles/${profile,,}"
 		config_profile "${profile,,}" "${config,,}"
+		;;
+	-profiles)
+		get_profiles
 		;;
 	-coding) config_profile "coding" ;;
 	-dev) config_profile "dev" ;;
