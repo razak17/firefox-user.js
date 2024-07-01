@@ -11,6 +11,8 @@ mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
 
 install_essentials() {
+  cd "$HOME/.dots/firefox-user.js" || exit
+
 	if [ ! -e "$TMP/user.js" ]; then
 		if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
 			echo "User.js file downloaded"
