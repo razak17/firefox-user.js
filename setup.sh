@@ -190,6 +190,24 @@ while [ "$#" -gt 0 ]; do
 	-profiles)
 		get_profiles
 		;;
+	-p)
+		profile=$1
+		if [ -z "$profile" ]; then
+			echo "missing profile"
+			exit 1
+		fi
+		config="$2"
+		if [ -n "$config" ]; then
+			shift
+    else
+			echo "missing profile"
+			exit 1
+		fi
+		config_profile "$profile" "$config"
+		;;
+	-profiles)
+		get_profiles
+		;;
 	-coding) config_profile "coding" ;;
 	-dev) config_profile "dev" ;;
 	-main) config_profile "main" ;;
