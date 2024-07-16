@@ -18,6 +18,7 @@ user_pref("privacy.clearOnShutdown.openWindows", false);
 user_pref("privacy.cpd.openWindows", false);
 user_pref("privacy.cpd.history", false);
 user_pref("privacy.cpd.cookies", false);
+user_pref("privacy.sanitize.sanitizeOnShutdown", false);
 
 // disable web extension restrictions (Bitwarden, 1Password, etc)
 user_pref("privacy.resistFingerprinting.block_mozAddonManager", false);

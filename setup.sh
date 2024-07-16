@@ -3,15 +3,21 @@ export LC_ALL=en_US.UTF-8
 FIREFOX_HOME=$HOME/.mozilla/firefox/profiles
 TMP="./temp"
 
-# cleaner
-# rm -rf "${TMP}"
-
 mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
 
 install_essentials() {
+  update="$1"
+
   cd "$HOME/.dots/firefox-user.js" || exit
+
+  if [[ -n "$update" && "$update" == "update" ]] ; then
+    # cleaner
+    rm -rf "${TMP}"
+  fi
+
+  mkdir -p "$TMP"
 
 	if [ ! -e "$TMP/user.js" ]; then
 		if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
@@ -82,7 +88,7 @@ setup() {
 }
 
 config_profile() {
-	configs=("coding" "dev" "main" "rec" "rgt")
+	configs=("coding" "default" "dev" "main" "rec" "rgt")
 
 	profile="$1"
 
@@ -159,6 +165,25 @@ get_profiles() {
 	firefox -P "${profile}"
 }
 
+clear_old_configs() {
+	profile="$1"
+
+	cd "$FIREFOX_HOME" || exit
+
+  if [ -d "$FIREFOX_HOME/$profile" ] ; then
+    cd "$FIREFOX_HOME/$profile" || exit
+
+    if ls -d chrome-* 1> /dev/null 2>&1; then
+      rm -r chrome-*
+    fi
+    if ls -d user.js-overrides-* 1> /dev/null 2>&1; then
+      rm -r user.js-overrides-*
+    fi
+  else
+		echo "Profile dir not found. Exiting..."
+  fi
+}
+
 while [ "$#" -gt 0 ]; do
 	curr=$1
 	shift
@@ -209,13 +234,35 @@ while [ "$#" -gt 0 ]; do
 		get_profiles
 		;;
 	-coding) config_profile "coding" ;;
+	-def) config_profile "default" ;;
 	-dev) config_profile "dev" ;;
 	-main) config_profile "main" ;;
 	-rec) config_profile "rec" ;;
 	-rgt) config_profile "rgt" ;;
 	-social) config_profile "social" "dev" ;;
-	-all)
+	-upd) install_essentials update ;;
+	-clear)
+		profile=$1
+		if [ -z "$profile" ]; then
+			echo "missing profile"
+			exit 1
+		fi
+
+		shift
+    clear_old_configs "$profile"
+    ;;
+	-clear-all)
+    clear_old_configs "coding"
+    clear_old_configs "default"
+    clear_old_configs "dev"
+    clear_old_configs "main"
+    clear_old_configs "rec"
+    clear_old_configs "rgt"
+    clear_old_configs "social"
+    ;;
+  -all)
 		config_profile "coding" &&
+			config_profile "default" &&
 			config_profile "dev" &&
 			config_profile "main" &&
 			config_profile "rec" &&

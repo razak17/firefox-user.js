@@ -1,6 +1,7 @@
 /***************************************************************************************************
   MIXED CONTENT
 ***************************************************************************************************/
+
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
 user_pref("network.cookie.lifetimePolicy", 0);
 
@@ -17,6 +18,7 @@ user_pref("privacy.clearOnShutdown.openWindows", false);
 user_pref("privacy.cpd.openWindows", false);
 user_pref("privacy.cpd.history", false);
 user_pref("privacy.cpd.cookies", false);
+user_pref("privacy.sanitize.sanitizeOnShutdown", false);
 
 /* 1601: control when to send a cross-origin referer
  * 0=always (default), 1=only if base domains match, 2=only if hosts match
