@@ -121,6 +121,7 @@ config_profile() {
 	for i in "${configs[@]}"; do
 		if [ "$config" == "$i" ]; then
 			echo "Using config: $config"
+      backup_profile_history "$profile"
 			setup "$profile" "$config"
 			return
 		fi
@@ -181,6 +182,17 @@ clear_old_configs() {
     fi
   else
 		echo "Profile dir not found. Exiting..."
+  fi
+}
+
+backup_profile_history() {
+  profile="$1"
+
+  mkdir -p "$HOME/.dots/firefox_backups"
+  if [ -f "$FIREFOX_HOME/$profile/places.sqlite" ]; then
+    mkdir -p "$HOME/.dots/firefox_backups/$profile"
+	  time=$(date +%F_%H%M%S_%N)
+    cp "$FIREFOX_HOME/$profile/places.sqlite" "$HOME/.dots/firefox_backups/$profile/places-$time.sqlite"
   fi
 }
 
@@ -250,6 +262,16 @@ while [ "$#" -gt 0 ]; do
 
 		shift
     clear_old_configs "$profile"
+    ;;
+	-backup)
+		profile=$1
+		if [ -z "$profile" ]; then
+			echo "missing profile"
+			exit 1
+		fi
+
+		shift
+    backup_profile_history "$profile"
     ;;
 	-clear-all)
     clear_old_configs "coding"
