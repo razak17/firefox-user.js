@@ -88,7 +88,7 @@ setup() {
 }
 
 config_profile() {
-	configs=("coding" "default" "dev" "main" "rec" "rgt")
+	configs=("coding" "dev" "main" "rec" "rgt")
 
 	profile="$1"
 
