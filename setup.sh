@@ -138,7 +138,7 @@ capitalize() {
 get_profiles() {
 	cd "$FIREFOX_HOME" || exit
 	options=$(dir | xargs -n 1 -P 1 echo "$0" | awk '{print $2}')
-	choice="$(echo "$options" | dmenu -l 10 -p 'Choose :')"
+	choice="$(echo "$options" | sort | dmenu -l 10 -p 'Choose :')"
 	# echo "$choice"
 
 	if [ -z "$choice" ]; then
