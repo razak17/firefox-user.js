@@ -107,7 +107,7 @@ config_profile() {
 	done
 
 	if [ -z "$config" ]; then
-		echo "Config not specified... Do you want to use default config (coding)? [y/n]"
+		printf "Config not specified... Do you want to use default config (coding)? [y/n] "
 		read -r ans
 		if [ "$ans" == "y" ]; then
 			config="coding"
@@ -202,6 +202,12 @@ create_profile() {
   printf "Profile created: %s" $profile
 }
 
+delete_profile() {
+  profile="$1"
+  rm -r "$FIREFOX_HOME/$profile"
+  printf "Profile deleted: %s" $profile
+}
+
 while [ "$#" -gt 0 ]; do
 	curr=$1
 	shift
@@ -231,6 +237,15 @@ while [ "$#" -gt 0 ]; do
     create_profile "$profile"
 		config_profile "${profile,,}" "${config,,}"
 		;;
+  -del)
+    profile=$1
+    if [ -z "$profile" ]; then
+      echo "missing profile"
+      exit 1
+    fi
+    shift
+    delete_profile "$profile"
+    ;;
 	-profiles)
 		get_profiles
 		;;
