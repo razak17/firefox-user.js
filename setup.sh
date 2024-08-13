@@ -196,6 +196,12 @@ backup_profile_history() {
   fi
 }
 
+create_profile() {
+  profile="$1"
+  firefox -CreateProfile "${profile^} /home/razak/.mozilla/firefox/profiles/${profile,,}"
+  printf "Profile created: %s" $profile
+}
+
 while [ "$#" -gt 0 ]; do
 	curr=$1
 	shift
@@ -217,11 +223,12 @@ while [ "$#" -gt 0 ]; do
 			echo "missing profile"
 			exit 1
 		fi
+		shift
 		config="$2"
 		if [ -n "$config" ]; then
 			shift
 		fi
-		firefox -CreateProfile "${profile^} /home/razak/.mozilla/firefox/profiles/${profile,,}"
+    create_profile "$profile"
 		config_profile "${profile,,}" "${config,,}"
 		;;
 	-profiles)
