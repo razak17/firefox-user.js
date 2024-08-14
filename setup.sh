@@ -230,6 +230,29 @@ while [ "$#" -gt 0 ]; do
 	shift
 
 	case "$curr" in
+  --help | -h)
+    echo "Usage: fuj [options]"
+    echo "Options:"
+    echo "  -install: Install 'fuj' command"
+    echo "  -new <profile> <config>: Create a new profile"
+    echo "  -del <profile>: Delete a profile"
+    echo "  -profiles: List all profiles"
+    echo "  -p <profile> <config> <ff_ultima>: Configure a profile"
+    echo "  -clear <profile>: Clear old configs"
+    echo "  -backup <profile>: Backup profile history"
+    echo "  -clear-all: Clear all old configs"
+    echo "  -all: Configure all profiles"
+    echo "  -coding: Configure coding profile"
+    echo "  -def: Configure default profile"
+    echo "  -dev: Configure dev profile"
+    echo "  -main: Configure main profile"
+    echo "  -rec: Configure rec profile"
+    echo "  -rgt: Configure rgt profile"
+    echo "  -social: Configure social profile"
+    echo "  -upd: Update user.js"
+    echo "  -clone: Clone firefox-user.js"
+    exit 0
+    ;;
 	-clone) clone_config ;;
 	-install)
 		mkdir -p "$HOME/.local/bin"
