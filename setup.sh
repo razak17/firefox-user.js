@@ -57,6 +57,7 @@ setup() {
 
 	profile="$1"
 	config="$2"
+	ff_ultima="$3"
 
 	mkdir -p "$FIREFOX_HOME/$profile"
 
@@ -66,18 +67,33 @@ setup() {
 	fi
 
 	mkdir -p "$FIREFOX_HOME/$profile/chrome"
+	 if [ -n "$ff_ultima" ]; then
+	   cp -R ./FF-ULTIMA/theme ./FF-ULTIMA/userChrome.css ./FF-ULTIMA/userContent.css "$FIREFOX_HOME/$profile/chrome"
+	 else
 	if [ "$config" == "rec" ]; then
 		cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$FIREFOX_HOME/$profile/chrome"
 	else
 		cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$FIREFOX_HOME/$profile/chrome"
 	fi
+	 fi
 
 	if [ -d "$FIREFOX_HOME/$profile/user.js-overrides" ]; then
 		mv "$FIREFOX_HOME/$profile/user.js-overrides" "$FIREFOX_HOME/$profile/user.js-overrides-$(date +%F_%H%M%S_%N)"
 	fi
 
 	mkdir -p "$FIREFOX_HOME/$profile/user.js-overrides"
+  if [ -e "./user.js-overrides/_ffu_base.js" ]; then
+    rm ./user.js-overrides/_ffu_base.js
+  fi
+  if [ -n "$ff_ultima" ]; then
+    cp ./FF-ULTIMA/user.js ./temp/_ffu_base.js
+    echo -e "\n" >> ./temp/_ffu_base.js
+    cat ./user.js-overrides/_ffu.js >> ./temp/_ffu_base.js
+    cp ./temp/_ffu_base.js ./user.js-overrides/_ffu_base.js
+    cp -R ./user.js-overrides/_base.js ./user.js-overrides/_ffu_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  else
 	cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  fi
 
 	pushd "$TMP" || exit
 	cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
@@ -98,6 +114,7 @@ config_profile() {
 	fi
 
 	config="$2"
+	ff_ultima="$3"
 
 	for i in "${configs[@]}"; do
 		if [ "$profile" == "$i" ]; then
@@ -122,7 +139,7 @@ config_profile() {
 		if [ "$config" == "$i" ]; then
 			echo "Using config: $config"
       backup_profile_history "$profile"
-			setup "$profile" "$config"
+			setup "$profile" "$config" "$ff_ultima"
 			return
 		fi
 	done
@@ -204,7 +221,7 @@ create_profile() {
 
 delete_profile() {
   profile="$1"
-  rm -r "$FIREFOX_HOME/$profile"
+  sudo rm -r "$FIREFOX_HOME/$profile"
   printf "Profile deleted: %s" $profile
 }
 
@@ -256,13 +273,18 @@ while [ "$#" -gt 0 ]; do
 			exit 1
 		fi
 		config="$2"
+	  ff_ultima="$3"
 		if [ -n "$config" ]; then
 			shift
     else
-			echo "missing profile"
+			echo "missing config"
 			exit 1
 		fi
-		config_profile "$profile" "$config"
+		if [ -n "$ff_ultima" ]; then
+			shift
+		fi
+		shift
+		config_profile "$profile" "$config" "$ff_ultima"
 		;;
 	-profiles)
 		get_profiles
