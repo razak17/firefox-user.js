@@ -309,9 +309,6 @@ while [ "$#" -gt 0 ]; do
 		shift
 		config_profile "$profile" "$config" "$ff_ultima"
 		;;
-	-profiles)
-		get_profiles
-		;;
 	-coding) config_profile "coding" ;;
 	-def) config_profile "default" ;;
 	-dev) config_profile "dev" ;;
