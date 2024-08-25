@@ -7,6 +7,20 @@ mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
 
+capitalize() {
+  word="$1"
+  echo "$(tr '[:lower:]' '[:upper:]' <<<"${word:0:1}")${word:1}"
+}
+
+clone_config() {
+  if [ ! -d "$HOME/.dots/firefox-user.js" ]; then
+    echo "Cloning firefox-user.js"
+    git clone https://github.com/razak17/firefox-user.js "$HOME"/.dots/firefox-user.js
+  else
+    echo "Remove '$HOME/.dots/firefox-user.js' and run again"
+  fi
+}
+
 install_essentials() {
   update="$1"
 
@@ -43,12 +57,33 @@ install_essentials() {
   fi
 }
 
-clone_config() {
-  if [ ! -d "$HOME/.dots/firefox-user.js" ]; then
-    echo "Cloning firefox-user.js"
-    git clone https://github.com/razak17/firefox-user.js "$HOME"/.dots/firefox-user.js
+clear_old_configs() {
+  profile="$1"
+
+  cd "$FIREFOX_HOME" || exit
+
+  if [ -d "$FIREFOX_HOME/$profile" ]; then
+    cd "$FIREFOX_HOME/$profile" || exit
+
+    if ls -d chrome-* 1>/dev/null 2>&1; then
+      rm -r chrome-*
+    fi
+    if ls -d user.js-overrides-* 1>/dev/null 2>&1; then
+      rm -r user.js-overrides-*
+    fi
   else
-    echo "Remove '$HOME/.dots/firefox-user.js' and run again"
+    echo "Profile dir not found. Exiting..."
+  fi
+}
+
+backup_profile_history() {
+  profile="$1"
+
+  mkdir -p "$HOME/.dots/firefox_backups"
+  if [ -f "$FIREFOX_HOME/$profile/places.sqlite" ]; then
+    mkdir -p "$HOME/.dots/firefox_backups/$profile"
+    time=$(date +%F_%H%M%S_%N)
+    cp "$FIREFOX_HOME/$profile/places.sqlite" "$HOME/.dots/firefox_backups/$profile/places-$time.sqlite"
   fi
 }
 
@@ -151,11 +186,6 @@ config_profile() {
   echo "Invalid config: $config"
 }
 
-capitalize() {
-  word="$1"
-  echo "$(tr '[:lower:]' '[:upper:]' <<<"${word:0:1}")${word:1}"
-}
-
 get_profiles() {
   cd "$FIREFOX_HOME" || exit
   options=$(dir | xargs -n 1 -P 1 echo "$0" | awk '{print $2}')
@@ -185,36 +215,6 @@ get_profiles() {
   notify-send -t 2000 "Firefox profiles" "Opening $choice profile..."
   profile=$(capitalize "$choice")
   firefox -P "${profile}"
-}
-
-clear_old_configs() {
-  profile="$1"
-
-  cd "$FIREFOX_HOME" || exit
-
-  if [ -d "$FIREFOX_HOME/$profile" ]; then
-    cd "$FIREFOX_HOME/$profile" || exit
-
-    if ls -d chrome-* 1>/dev/null 2>&1; then
-      rm -r chrome-*
-    fi
-    if ls -d user.js-overrides-* 1>/dev/null 2>&1; then
-      rm -r user.js-overrides-*
-    fi
-  else
-    echo "Profile dir not found. Exiting..."
-  fi
-}
-
-backup_profile_history() {
-  profile="$1"
-
-  mkdir -p "$HOME/.dots/firefox_backups"
-  if [ -f "$FIREFOX_HOME/$profile/places.sqlite" ]; then
-    mkdir -p "$HOME/.dots/firefox_backups/$profile"
-    time=$(date +%F_%H%M%S_%N)
-    cp "$FIREFOX_HOME/$profile/places.sqlite" "$HOME/.dots/firefox_backups/$profile/places-$time.sqlite"
-  fi
 }
 
 create_profile() {
