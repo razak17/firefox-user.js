@@ -1,11 +1,14 @@
 #!/bin/bash
 export LC_ALL=en_US.UTF-8
+CONFIG_HOME=$HOME/.dots/firefox-user.js
 FIREFOX_HOME=$HOME/.mozilla/firefox/profiles
+ZEN_HOME=$HOME/.zen
 TMP="./temp"
 
 mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
 mkdir -p "$TMP"
+mkdir -p "$ZEN_HOME"
 
 capitalize() {
   word="$1"
@@ -13,18 +16,18 @@ capitalize() {
 }
 
 clone_config() {
-  if [ ! -d "$HOME/.dots/firefox-user.js" ]; then
+  if [ ! -d "$CONFIG_HOME" ]; then
     echo "Cloning firefox-user.js"
-    git clone https://github.com/razak17/firefox-user.js "$HOME"/.dots/firefox-user.js
+    git clone https://github.com/razak17/firefox-user.js "$CONFIG_HOME"
   else
-    echo "Remove '$HOME/.dots/firefox-user.js' and run again"
+    echo "Remove '$CONFIG_HOME' and run again"
   fi
 }
 
 install_essentials() {
   update="$1"
 
-  cd "$HOME/.dots/firefox-user.js" || exit
+  cd "$CONFIG_HOME" || exit
 
   if [[ -n "$update" && "$update" == "update" ]]; then
     # cleaner
@@ -60,10 +63,12 @@ install_essentials() {
 clear_old_configs() {
   profile="$1"
 
-  cd "$FIREFOX_HOME" || exit
+  dir="$FIREFOX_HOME"
 
-  if [ -d "$FIREFOX_HOME/$profile" ]; then
-    cd "$FIREFOX_HOME/$profile" || exit
+  cd "$dir" || exit
+
+  if [ -d "$dir/$profile" ]; then
+    cd "$dir/$profile" || exit
 
     if ls -d chrome-* 1>/dev/null 2>&1; then
       rm -r chrome-*
@@ -87,55 +92,86 @@ backup_profile_history() {
   fi
 }
 
-setup() {
-  install_essentials
+backup_chrome_css() {
+  dir="$1"
+  profile="$2"
 
-  profile="$1"
-  config="$2"
-  ff_ultima="$3"
-
-  mkdir -p "$FIREFOX_HOME/$profile"
-
-  pushd "$HOME/.dots/firefox-user.js" || exit
-  if [ -d "$FIREFOX_HOME/$profile/chrome" ]; then
-    mv "$FIREFOX_HOME/$profile/chrome" "$FIREFOX_HOME/$profile/chrome-$(date +%F_%H%M%S_%N)"
+  if [ -d "$dir/$profile/chrome" ]; then
+    mv "$dir/$profile/chrome" "$dir/$profile/chrome-$(date +%F_%H%M%S_%N)"
   fi
+}
 
-  mkdir -p "$FIREFOX_HOME/$profile/chrome"
+chrome_css_setup() {
+  dir="$1"
+  profile="$2"
+  config="$3"
+  ff_ultima="$4"
+
+  backup_chrome_css "$dir" "$profile"
+
+  mkdir -p "$dir/$profile/chrome"
+
+  pushd "$CONFIG_HOME" || exit
+
   if [ -n "$ff_ultima" ]; then
     cp -R ./FF-ULTIMA/theme ./FF-ULTIMA/userChrome.css ./FF-ULTIMA/userContent.css "$FIREFOX_HOME/$profile/chrome"
+    return
+  fi
+
+  if [ "$config" == "rec" ]; then
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$dir/$profile/chrome"
   else
-    if [ "$config" == "rec" ]; then
-      cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$FIREFOX_HOME/$profile/chrome"
-    else
-      cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$FIREFOX_HOME/$profile/chrome"
-    fi
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$dir/$profile/chrome"
   fi
+}
 
-  if [ -d "$FIREFOX_HOME/$profile/user.js-overrides" ]; then
-    mv "$FIREFOX_HOME/$profile/user.js-overrides" "$FIREFOX_HOME/$profile/user.js-overrides-$(date +%F_%H%M%S_%N)"
+backup_user_js_overrides() {
+  dir="$1"
+  profile="$2"
+
+  if [ -d "$dir/$profile/user.js-overrides" ]; then
+    mv "$dir/$profile/user.js-overrides" "$dir/$profile/user.js-overrides-$(date +%F_%H%M%S_%N)"
   fi
+}
 
-  mkdir -p "$FIREFOX_HOME/$profile/user.js-overrides"
+ff_ultima_overrides_setup() {
+  pushd "$CONFIG_HOME" || exit
+  cp ./FF-ULTIMA/user.js ./temp/_ffu_base.js
+  echo -e "\n" >>./temp/_ffu_base.js
+  cat ./user.js-overrides/_ffu.js >>./temp/_ffu_base.js
+  cp ./temp/_ffu_base.js ./user.js-overrides/_ffu_base.js
+  cp -R ./user.js-overrides/_base.js ./user.js-overrides/_ffu_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+}
+
+user_js_overrides_setup() {
+  dir="$1"
+  profile="$2"
+  config="$3"
+  ff_ultima="$4"
+
+  backup_user_js_overrides "$dir" "$profile"
+
+  mkdir -p "$dir/$profile/user.js-overrides"
+
+  pushd "$CONFIG_HOME" || exit
+
   if [ -e "./user.js-overrides/_ffu_base.js" ]; then
     rm ./user.js-overrides/_ffu_base.js
   fi
+
   if [ -n "$ff_ultima" ]; then
-    cp ./FF-ULTIMA/user.js ./temp/_ffu_base.js
-    echo -e "\n" >>./temp/_ffu_base.js
-    cat ./user.js-overrides/_ffu.js >>./temp/_ffu_base.js
-    cp ./temp/_ffu_base.js ./user.js-overrides/_ffu_base.js
-    cp -R ./user.js-overrides/_base.js ./user.js-overrides/_ffu_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+    ff_ultima_overrides_setup
   else
-    cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+    cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$dir/$profile/user.js-overrides"
   fi
 
   pushd "$TMP" || exit
-  cp -R user.js updater.sh prefsCleaner.sh "$FIREFOX_HOME/$profile"
 
-  pushd "$FIREFOX_HOME/$profile" || exit
+  cp -R user.js updater.sh prefsCleaner.sh "$dir/$profile"
+
+  pushd "$dir/$profile" || exit
   sh ./updater.sh -d -s -o user.js-overrides
-  cd "$HOME/.dots/firefox-user.js" || exit
+  cd "$CONFIG_HOME" || exit
   if [ -e "./user.js-overrides/_ffu_base.js" ]; then
     rm ./user.js-overrides/_ffu_base.js
   fi
@@ -145,15 +181,16 @@ setup() {
 config_profile() {
   configs=("coding" "dev" "main" "rec" "rgt")
 
-  profile="$1"
+  flav="$1"
+  profile="$2"
 
   if [ -z "$profile" ]; then
     echo "Profile not found... Exiting..."
     exit 1
   fi
 
-  config="$2"
-  ff_ultima="$3"
+  config="$3"
+  ff_ultima="$4"
 
   for i in "${configs[@]}"; do
     if [ "$profile" == "$i" ]; then
@@ -178,12 +215,41 @@ config_profile() {
     if [ "$config" == "$i" ]; then
       echo "Using config: $config"
       backup_profile_history "$profile"
+      if [ "$flav" == "zen" ]; then
+        setup_zen "$profile" "$config" "$ff_ultima"
+        return
+      fi
       setup "$profile" "$config" "$ff_ultima"
       return
     fi
   done
 
   echo "Invalid config: $config"
+}
+
+# OG Firefox
+setup_firefox() {
+  install_essentials
+
+  profile="$1"
+  config="$2"
+  ff_ultima="$3"
+
+  dir="$FIREFOX_HOME"
+
+  mkdir -p "$dir/$profile"
+
+  chrome_css_setup "$dir" "$profile" "$config" "$ff_ultima"
+
+  user_js_overrides_setup "$dir" "$profile" "$config" "$ff_ultima"
+}
+
+config_firefox() {
+  profile="$1"
+  config="$2"
+  ff_ultima="$3"
+
+  config_profile "firefox" "$profile" "$config" "$ff_ultima"
 }
 
 get_profiles() {
@@ -229,6 +295,37 @@ delete_profile() {
   printf "Profile deleted: %s" "$profile"
 }
 
+# Zen
+setup_zen() {
+  install_essentials
+
+  profile="$1"
+  config="$2"
+  ff_ultima="$3"
+
+  dir="$ZEN_HOME"
+
+  mkdir -p "$dir/$profile"
+
+  chrome_css_setup "$dir" "$profile" "$config" "$ff_ultima"
+
+  user_js_overrides_setup "$dir" "$profile" "$config" "$ff_ultima"
+}
+
+config_zen() {
+  profile="$1"
+  config="$2"
+  ff_ultima="$3"
+
+  config_profile "zen" "$profile" "$config" "$ff_ultima"
+}
+
+create_zen_profile() {
+  profile="$1"
+  zen-browser -CreateProfile "${profile^} $ZEN_HOME/${profile,,}"
+  printf "Profile created: %s" "$profile"
+}
+
 while [ "$#" -gt 0 ]; do
   curr=$1
   shift
@@ -257,6 +354,35 @@ while [ "$#" -gt 0 ]; do
     echo "  -clone: Clone firefox-user.js"
     exit 0
     ;;
+  -zen-new)
+    profile=$1
+    if [ -z "$profile" ]; then
+      echo "missing profile"
+      exit 1
+    fi
+    shift
+    create_zen_profile "$profile"
+    ;;
+  -zen-p)
+    profile=$1
+    if [ -z "$profile" ]; then
+      echo "missing profile"
+      exit 1
+    fi
+    config="$2"
+    ff_ultima="$3"
+    if [ -n "$config" ]; then
+      shift
+    else
+      echo "missing config"
+      exit 1
+    fi
+    if [ -n "$ff_ultima" ]; then
+      shift
+    fi
+    shift
+    config_zen "$profile" "$config" "$ff_ultima"
+    ;;
   -clone) clone_config ;;
   -install)
     mkdir -p "$HOME/.local/bin"
@@ -264,7 +390,7 @@ while [ "$#" -gt 0 ]; do
       echo "fuj already exists in $HOME/.local/bin"
       exit 1
     fi
-    ln -s "$HOME/.dots/firefox-user.js/setup.sh" "$HOME/.local/bin/fuj"
+    ln -s "$CONFIG_HOME/setup.sh" "$HOME/.local/bin/fuj"
     echo "Installed 'fuj' command"
     ;;
   -new)
@@ -279,7 +405,7 @@ while [ "$#" -gt 0 ]; do
       shift
     fi
     create_profile "$profile"
-    config_profile "${profile,,}" "${config,,}"
+    config_firefox "${profile,,}" "${config,,}"
     ;;
   -del)
     profile=$1
@@ -311,15 +437,15 @@ while [ "$#" -gt 0 ]; do
       shift
     fi
     shift
-    config_profile "$profile" "$config" "$ff_ultima"
+    config_firefox "$profile" "$config" "$ff_ultima"
     ;;
-  -coding) config_profile "coding" ;;
-  -def) config_profile "default" ;;
-  -dev) config_profile "dev" ;;
-  -main) config_profile "main" ;;
-  -rec) config_profile "rec" ;;
-  -rgt) config_profile "rgt" ;;
-  -social) config_profile "social" "dev" ;;
+  -coding) config_firefox "coding" ;;
+  -def) config_firefox "default" ;;
+  -dev) config_firefox "dev" ;;
+  -main) config_firefox "main" ;;
+  -rec) config_firefox "rec" ;;
+  -rgt) config_firefox "rgt" ;;
+  -social) config_firefox "social" "dev" ;;
   -upd) install_essentials update ;;
   -clear)
     profile=$1
@@ -351,13 +477,13 @@ while [ "$#" -gt 0 ]; do
     clear_old_configs "social"
     ;;
   -all)
-    config_profile "coding" &&
-      config_profile "default" &&
-      config_profile "dev" &&
-      config_profile "main" &&
-      config_profile "rec" &&
-      config_profile "rgt" &&
-      config_profile "social" "dev" &&
+    config_firefox "coding" &&
+      config_firefox "default" &&
+      config_firefox "dev" &&
+      config_firefox "main" &&
+      config_firefox "rec" &&
+      config_firefox "rgt" &&
+      config_firefox "social" "dev" &&
       echo "All profiles completed!"
     ;;
   *) echo "Unavailable command... $curr" ;;
