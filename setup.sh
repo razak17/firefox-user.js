@@ -152,10 +152,11 @@ ff_ultima_overrides_setup() {
 }
 
 user_js_overrides_setup() {
-  dir="$1"
-  profile="$2"
-  config="$3"
-  ff_ultima="$4"
+  flav="$1"
+  dir="$2"
+  profile="$3"
+  config="$4"
+  ff_ultima="$5"
 
   backup_user_js_overrides "$dir" "$profile"
 
@@ -171,6 +172,10 @@ user_js_overrides_setup() {
     ff_ultima_overrides_setup
   else
     cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$dir/$profile/user.js-overrides"
+  fi
+
+  if [ "$flav" == "zen" ]; then
+    cp -R ./user.js-overrides/_zen.js  "$dir/$profile/user.js-overrides"
   fi
 
   pushd "$TMP" || exit
@@ -235,36 +240,13 @@ config_profile() {
   echo "Invalid config: $config"
 }
 
-# OG Firefox
-setup_firefox() {
-  install_essentials
-
-  profile="$1"
-  config="$2"
-  ff_ultima="$3"
-
-  dir="$FIREFOX_HOME"
-
-  mkdir -p "$dir/$profile"
-
-  chrome_css_setup "$dir" "$profile" "$config" "$ff_ultima"
-
-  user_js_overrides_setup "$dir" "$profile" "$config" "$ff_ultima"
-}
-
-config_firefox() {
-  profile="$1"
-  config="$2"
-  ff_ultima="$3"
-
-  config_profile "firefox" "$profile" "$config" "$ff_ultima"
-}
-
 get_profiles() {
-  cd "$FIREFOX_HOME" || exit
-  options=$(dir | xargs -n 1 -P 1 echo "$0" | awk '{print $2}')
+  dir="$1"
+
+  cd "$dir" || exit
+  options=$(find . -maxdepth 1 -type d -name '*' -exec basename {} \; | grep -v '^.$' | grep -v '^..$')
+  # options=$(dir | xargs -n 1 -P 1 echo "$0" | awk '{print $2}')
   choice="$(echo "$options" | sort | dmenu -l 10 -p 'Choose :')"
-  # echo "$choice"
 
   if [ -z "$choice" ]; then
     # notify-send -u critical -t 2000 "Firefox Profiles" "nothing selected!"
@@ -288,7 +270,40 @@ get_profiles() {
 
   notify-send -t 2000 "Firefox profiles" "Opening $choice profile..."
   profile=$(capitalize "$choice")
-  firefox -P "${profile}"
+  if [ "$dir" == "$FIREFOX_HOME" ]; then
+    firefox -P "$profile"
+  else
+    zen-browser -P "$profile"
+  fi
+}
+
+# OG Firefox
+setup_firefox() {
+  install_essentials
+
+  profile="$1"
+  config="$2"
+  ff_ultima="$3"
+
+  dir="$FIREFOX_HOME"
+
+  mkdir -p "$dir/$profile"
+
+  chrome_css_setup "$dir" "$profile" "$config" "$ff_ultima"
+
+  user_js_overrides_setup "firefox" "$dir" "$profile" "$config" "$ff_ultima"
+}
+
+config_firefox() {
+  profile="$1"
+  config="$2"
+  ff_ultima="$3"
+
+  config_profile "firefox" "$profile" "$config" "$ff_ultima"
+}
+
+get_firefox_profiles() {
+  get_profiles "$FIREFOX_HOME"
 }
 
 create_profile() {
@@ -315,7 +330,7 @@ setup_zen() {
 
   mkdir -p "$dir/$profile"
 
-  user_js_overrides_setup "$dir" "$profile" "$config" "$ff_ultima"
+  user_js_overrides_setup "zen" "$dir" "$profile" "$config" "$ff_ultima"
 }
 
 config_zen() {
@@ -324,6 +339,10 @@ config_zen() {
   ff_ultima="$3"
 
   config_profile "zen" "$profile" "$config" "$ff_ultima"
+}
+
+get_zen_profiles() {
+  get_profiles "$ZEN_HOME"
 }
 
 create_zen_profile() {
@@ -389,6 +408,9 @@ while [ "$#" -gt 0 ]; do
     shift
     config_zen "$profile" "$config" "$ff_ultima"
     ;;
+  -zen-profiles)
+    get_zen_profiles
+    ;;
   -clone) clone_config ;;
   -install)
     mkdir -p "$HOME/.local/bin"
@@ -423,7 +445,7 @@ while [ "$#" -gt 0 ]; do
     delete_profile "$profile"
     ;;
   -profiles)
-    get_profiles
+    get_firefox_profiles
     ;;
   -p)
     profile=$1
