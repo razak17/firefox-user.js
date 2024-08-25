@@ -315,8 +315,6 @@ setup_zen() {
 
   mkdir -p "$dir/$profile"
 
-  chrome_css_setup "$dir" "$profile" "$config" "$ff_ultima"
-
   user_js_overrides_setup "$dir" "$profile" "$config" "$ff_ultima"
 }
 
