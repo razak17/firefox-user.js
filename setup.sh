@@ -307,7 +307,7 @@ get_firefox_profiles() {
 
 create_firefox_profile() {
   profile="$1"
-  firefox -CreateProfile "${profile^} /home/razak/.mozilla/firefox/profiles/${profile,,}"
+  firefox -CreateProfile "${profile^} $FIREFOX_HOME/${profile,,}"
   printf "Profile created: %s" "$profile"
 }
 
