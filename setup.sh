@@ -82,13 +82,21 @@ clear_old_configs() {
 }
 
 backup_profile_history() {
-  profile="$1"
+  flav="$1"
+  profile="$2"
 
-  mkdir -p "$HOME/.dots/firefox_backups"
-  if [ -f "$FIREFOX_HOME/$profile/places.sqlite" ]; then
-    mkdir -p "$HOME/.dots/firefox_backups/$profile"
+  dir="$FIREFOX_HOME"
+
+  if [ "$flav" == "zen" ]; then
+    dir="$ZEN_HOME"
+  fi
+
+  backup_dir=""$HOME/.dots/${flav}_backups""
+  mkdir -p "$backup_dir"
+  if [ -f "$dir/$profile/places.sqlite" ]; then
+    mkdir -p "$backup_dir/$profile"
     time=$(date +%F_%H%M%S_%N)
-    cp "$FIREFOX_HOME/$profile/places.sqlite" "$HOME/.dots/firefox_backups/$profile/places-$time.sqlite"
+    cp "$dir/$profile/places.sqlite" "$backup_dir/$profile/places-$time.sqlite"
   fi
 }
 
@@ -214,7 +222,7 @@ config_profile() {
   for i in "${configs[@]}"; do
     if [ "$config" == "$i" ]; then
       echo "Using config: $config"
-      backup_profile_history "$profile"
+      backup_profile_history "$flav" "$profile"
       if [ "$flav" == "zen" ]; then
         setup_zen "$profile" "$config" "$ff_ultima"
         return
@@ -465,7 +473,7 @@ while [ "$#" -gt 0 ]; do
     fi
 
     shift
-    backup_profile_history "$profile"
+    backup_profile_history "firefox" "$profile"
     ;;
   -clear-all)
     clear_old_configs "coding"
