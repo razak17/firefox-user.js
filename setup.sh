@@ -61,9 +61,8 @@ install_essentials() {
 }
 
 clear_old_configs() {
-  profile="$1"
-
-  dir="$FIREFOX_HOME"
+  dir="$1"
+  profile="$2"
 
   cd "$dir" || exit
 
@@ -175,7 +174,7 @@ user_js_overrides_setup() {
   fi
 
   if [ "$flav" == "zen" ]; then
-    cp -R ./user.js-overrides/_zen.js  "$dir/$profile/user.js-overrides"
+    cp -R ./user.js-overrides/_zen.js "$dir/$profile/user.js-overrides"
   fi
 
   pushd "$TMP" || exit
@@ -306,16 +305,24 @@ get_firefox_profiles() {
   get_profiles "$FIREFOX_HOME"
 }
 
-create_profile() {
+create_firefox_profile() {
   profile="$1"
   firefox -CreateProfile "${profile^} /home/razak/.mozilla/firefox/profiles/${profile,,}"
   printf "Profile created: %s" "$profile"
 }
 
-delete_profile() {
+delete_firefox_profile() {
   profile="$1"
   sudo rm -r "$FIREFOX_HOME/$profile"
   printf "Profile deleted: %s" "$profile"
+}
+
+clear_old_firefox_configs() {
+  profile="$1"
+
+  dir="$FIREFOX_HOME"
+
+  clear_old_configs "$dir" "$profile"
 }
 
 # Zen
@@ -349,6 +356,14 @@ create_zen_profile() {
   profile="$1"
   zen-browser -CreateProfile "${profile^} $ZEN_HOME/${profile,,}"
   printf "Profile created: %s" "$profile"
+}
+
+clear_old_zen_configs() {
+  profile="$1"
+
+  dir="$ZEN_HOME"
+
+  clear_old_configs "$dir" "$profile"
 }
 
 while [ "$#" -gt 0 ]; do
@@ -421,6 +436,16 @@ while [ "$#" -gt 0 ]; do
     ln -s "$CONFIG_HOME/setup.sh" "$HOME/.local/bin/fuj"
     echo "Installed 'fuj' command"
     ;;
+  -zen-clear)
+    profile=$1
+    if [ -z "$profile" ]; then
+      echo "missing profile"
+      exit 1
+    fi
+
+    shift
+    clear_old_zen_configs "$profile"
+    ;;
   -new)
     profile=$1
     if [ -z "$profile" ]; then
@@ -432,7 +457,7 @@ while [ "$#" -gt 0 ]; do
     if [ -n "$config" ]; then
       shift
     fi
-    create_profile "$profile"
+    create_firefox_profile "$profile"
     config_firefox "${profile,,}" "${config,,}"
     ;;
   -del)
@@ -442,7 +467,7 @@ while [ "$#" -gt 0 ]; do
       exit 1
     fi
     shift
-    delete_profile "$profile"
+    delete_firefox_profile "$profile"
     ;;
   -profiles)
     get_firefox_profiles
@@ -483,7 +508,7 @@ while [ "$#" -gt 0 ]; do
     fi
 
     shift
-    clear_old_configs "$profile"
+    clear_old_firefox_configs "$profile"
     ;;
   -backup)
     profile=$1
@@ -496,13 +521,13 @@ while [ "$#" -gt 0 ]; do
     backup_profile_history "firefox" "$profile"
     ;;
   -clear-all)
-    clear_old_configs "coding"
-    clear_old_configs "default"
-    clear_old_configs "dev"
-    clear_old_configs "main"
-    clear_old_configs "rec"
-    clear_old_configs "rgt"
-    clear_old_configs "social"
+    clear_old_firefox_configs "coding"
+    clear_old_firefox_configs "default"
+    clear_old_firefox_configs "dev"
+    clear_old_firefox_configs "main"
+    clear_old_firefox_configs "rec"
+    clear_old_firefox_configs "rgt"
+    clear_old_firefox_configs "social"
     ;;
   -all)
     config_firefox "coding" &&
