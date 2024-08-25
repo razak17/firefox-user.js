@@ -11,7 +11,7 @@ user_pref("font.internaluseonly.changed", false);
 user_pref("browser.urlbar.suggest.history", false);
 user_pref("browser.urlbar.suggest.bookmark", true);
 user_pref("browser.urlbar.suggest.openpage", true);
-user_pref("browser.urlbar.suggest.engines", false);
+// user_pref("browser.urlbar.suggest.engines", false);
 user_pref("browser.urlbar.suggest.topsites", false);
 user_pref("browser.search.countryCode", "US");
 user_pref("browser.search.widget.inNavBar", true);
