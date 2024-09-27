@@ -272,7 +272,7 @@ get_profiles() {
   if [ "$dir" == "$FIREFOX_HOME" ]; then
     firefox -P "$profile"
   else
-    zen-browser -P "$profile"
+    zen -P "$profile"
   fi
 }
 
@@ -354,7 +354,7 @@ get_zen_profiles() {
 
 create_zen_profile() {
   profile="$1"
-  zen-browser -CreateProfile "${profile^} $ZEN_HOME/${profile,,}"
+  zen -CreateProfile "${profile^} $ZEN_HOME/${profile,,}"
   printf "Profile created: %s" "$profile"
 }
 
