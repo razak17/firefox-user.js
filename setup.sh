@@ -196,6 +196,31 @@ config_profile() {
   flav="$1"
   profile="$2"
 
+  if [ "$flav" == "firefox" ]; then
+    cd "$FIREFOX_HOME" || exit
+  elif [ "$flav" == "zen" ]; then
+    cd "$ZEN_HOME" || exit
+  else
+    echo "Invalid flavor... Exiting..."
+    exit 1
+  fi
+
+  options=$(find . -maxdepth 1 -type d -name '*' -exec basename {} \; | grep -v '^.$' | grep -v '^..$')
+
+  profile_exists=false
+  for element in $options; do
+    if [ "$element" = "$profile" ]; then
+      echo "Found $element"
+      profile_exists=true
+      break
+    fi
+  done
+
+  if [ "$profile_exists" = false ]; then
+    echo "Profile does not exist"
+    exit 1
+  fi
+
   if [ -z "$profile" ]; then
     echo "Profile not found... Exiting..."
     exit 1
@@ -529,14 +554,35 @@ while [ "$#" -gt 0 ]; do
     clear_old_firefox_configs "rgt"
     clear_old_firefox_configs "social"
     ;;
+  -zen-clear-all)
+    clear_old_zen_configs "coding"
+    clear_old_zen_configs "default"
+    clear_old_zen_configs "dev"
+    clear_old_zen_configs "main"
+    clear_old_zen_configs "rec"
+    clear_old_zen_configs "rgt"
+    clear_old_zen_configs "shaapcau_zwsfq"
+    clear_old_zen_configs "social"
+    ;;
   -all)
     config_firefox "coding" &&
-      config_firefox "default" &&
+      config_firefox "default" "coding" &&
       config_firefox "dev" &&
       config_firefox "main" &&
       config_firefox "rec" &&
       config_firefox "rgt" &&
       config_firefox "social" "dev" &&
+      echo "All profiles completed!"
+    ;;
+  -zen-all)
+    config_zen "coding" &&
+      config_zen "default" "coding" &&
+      config_zen "dev" &&
+      config_zen "main" &&
+      config_zen "rec" &&
+      config_zen "rgt" &&
+      config_zen "shaapcau_zwsfq" "coding" &&
+      config_zen "social" "dev" &&
       echo "All profiles completed!"
     ;;
   *) echo "Unavailable command... $curr" ;;
