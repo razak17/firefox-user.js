@@ -231,7 +231,7 @@ config_profile() {
         setup_zen "$profile" "$config" "$ff_ultima"
         return
       fi
-      setup "$profile" "$config" "$ff_ultima"
+      setup_firefox "$profile" "$config" "$ff_ultima"
       return
     fi
   done
