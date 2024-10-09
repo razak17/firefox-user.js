@@ -575,7 +575,7 @@ while [ "$#" -gt 0 ]; do
       echo "All profiles completed!"
     ;;
   -zen-all)
-    config_zen "coding" &&
+    config_zen "code" &&
       config_zen "default" "coding" &&
       config_zen "dev" &&
       config_zen "main" &&
