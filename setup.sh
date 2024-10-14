@@ -548,11 +548,11 @@ while [ "$#" -gt 0 ]; do
   -clear-all)
     clear_old_firefox_configs "coding"
     clear_old_firefox_configs "default"
-    clear_old_firefox_configs "dev"
+    # clear_old_firefox_configs "dev"
     clear_old_firefox_configs "main"
     clear_old_firefox_configs "rec"
-    clear_old_firefox_configs "rgt"
-    clear_old_firefox_configs "social"
+    # clear_old_firefox_configs "rgt"
+    # clear_old_firefox_configs "social"
     ;;
   -zen-clear-all)
     clear_old_zen_configs "coding"
@@ -567,22 +567,22 @@ while [ "$#" -gt 0 ]; do
   -all)
     config_firefox "coding" &&
       config_firefox "default" "coding" &&
-      config_firefox "dev" &&
+      # config_firefox "dev" &&
       config_firefox "main" &&
       config_firefox "rec" &&
-      config_firefox "rgt" &&
-      config_firefox "social" "dev" &&
+      # config_firefox "rgt" &&
+      # config_firefox "social" "dev" &&
       echo "All profiles completed!"
     ;;
   -zen-all)
-    config_zen "code" &&
+    config_zen "code" "coding" &&
       config_zen "default" "coding" &&
       config_zen "dev" &&
       config_zen "main" &&
       config_zen "rec" &&
       config_zen "rgt" &&
       config_zen "shaapcau_zwsfq" "coding" &&
-      config_zen "social" "dev" &&
+      # config_zen "social" "dev" &&
       echo "All profiles completed!"
     ;;
   *) echo "Unavailable command... $curr" ;;
