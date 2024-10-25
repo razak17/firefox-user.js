@@ -268,7 +268,8 @@ get_profiles() {
   dir="$1"
 
   cd "$dir" || exit
-  options=$(find . -maxdepth 1 -type d -name '*' -exec basename {} \; | grep -v '^.$' | grep -v '^..$')
+  # options=$(find . -maxdepth 1 -type d -name '*' -exec basename {} \; | grep -v '^.$' | grep -v '^..$')
+  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v '^.$' | grep -v '^..$' | grep -v '^firefox-')
   # options=$(dir | xargs -n 1 -P 1 echo "$0" | awk '{print $2}')
   choice="$(echo "$options" | sort | dmenu -l 10 -p 'Choose :')"
 
