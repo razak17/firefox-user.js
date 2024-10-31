@@ -479,12 +479,7 @@ while [ "$#" -gt 0 ]; do
       exit 1
     fi
     shift
-    config="$2"
-    if [ -n "$config" ]; then
-      shift
-    fi
     create_firefox_profile "$profile"
-    config_firefox "${profile,,}" "${config,,}"
     ;;
   -del)
     profile=$1
@@ -582,7 +577,6 @@ while [ "$#" -gt 0 ]; do
       config_zen "main" &&
       config_zen "rec" &&
       config_zen "rgt" &&
-      config_zen "shaapcau_zwsfq" "coding" &&
       # config_zen "social" "dev" &&
       echo "All profiles completed!"
     ;;

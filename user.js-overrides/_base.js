@@ -203,3 +203,6 @@ user_pref("browser.preferences.experimental", true);
 
 // disable firefox view
 user_pref("browser.tabs.firefox-view", false);
+
+ // install unsigned addons
+user_pref("xpinstall.signatures.required", false);
