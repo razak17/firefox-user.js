@@ -551,14 +551,13 @@ while [ "$#" -gt 0 ]; do
     # clear_old_firefox_configs "social"
     ;;
   -zen-clear-all)
-    clear_old_zen_configs "coding"
+    clear_old_zen_configs "code"
+    # clear_old_zen_configs "coding"
     clear_old_zen_configs "default"
     clear_old_zen_configs "dev"
     clear_old_zen_configs "main"
     clear_old_zen_configs "rec"
     clear_old_zen_configs "rgt"
-    clear_old_zen_configs "shaapcau_zwsfq"
-    clear_old_zen_configs "social"
     ;;
   -all)
     config_firefox "coding" &&
