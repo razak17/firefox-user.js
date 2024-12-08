@@ -266,6 +266,7 @@ config_profile() {
 
 get_profiles() {
   dir="$1"
+  extra="$2"
 
   cd "$dir" || exit
   # options=$(find . -maxdepth 1 -type d -name '*' -exec basename {} \; | grep -v '^.$' | grep -v '^..$')
@@ -298,7 +299,11 @@ get_profiles() {
   if [ "$dir" == "$FIREFOX_HOME" ]; then
     firefox -P "$profile"
   else
-    zen -P "$profile"
+    if [ "$extra" == "twilight" ]; then
+      zen-tw -P "$profile"
+    else
+      zen -P "$profile"
+    fi
   fi
 }
 
@@ -375,7 +380,7 @@ config_zen() {
 }
 
 get_zen_profiles() {
-  get_profiles "$ZEN_HOME"
+  get_profiles "$ZEN_HOME" "$1"
 }
 
 create_zen_profile() {
@@ -450,7 +455,7 @@ while [ "$#" -gt 0 ]; do
     config_zen "$profile" "$config" "$ff_ultima"
     ;;
   -zen-profiles)
-    get_zen_profiles
+    get_zen_profiles "$1"
     ;;
   -clone) clone_config ;;
   -install)
