@@ -558,7 +558,7 @@ while [ "$#" -gt 0 ]; do
   -zen-clear-all)
     clear_old_zen_configs "code"
     # clear_old_zen_configs "coding"
-    clear_old_zen_configs "default"
+    # clear_old_zen_configs "default"
     clear_old_zen_configs "dev"
     clear_old_zen_configs "main"
     clear_old_zen_configs "rec"
@@ -576,7 +576,7 @@ while [ "$#" -gt 0 ]; do
     ;;
   -zen-all)
     config_zen "code" "coding" &&
-      config_zen "default" "coding" &&
+      # config_zen "default" "coding" &&
       config_zen "dev" &&
       config_zen "main" &&
       config_zen "rec" &&
