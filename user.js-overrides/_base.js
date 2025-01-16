@@ -108,8 +108,10 @@ user_pref("extensions.webextensions.restrictedDomains", "");
 user_pref("network.trr.mode", 3);
 // https://dns.quad9.net/dns-query
 // https://doh-ch.blahdns.com/dns-query
-user_pref("network.trr.custom_uri", "https://dns.quad9.net/dns-query");
-user_pref("network.trr.uri", "https://dns.quad9.net/dns-query");
+// https://cloudflare-dns.com/dns-query
+// https://doh.cleanbrowsing.org/doh/family-filter
+user_pref("network.trr.custom_uri", "https://cloudflare-dns.com/dns-query");
+user_pref("network.trr.uri", "https://cloudflare-dns.com/dns-query");
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 
 // Disable firefox suggest (Manually)
