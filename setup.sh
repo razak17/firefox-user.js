@@ -3,7 +3,7 @@ export LC_ALL=en_US.UTF-8
 CONFIG_HOME=$HOME/.dots/firefox-user.js
 FIREFOX_HOME=$HOME/.mozilla/firefox/profiles
 ZEN_HOME=$HOME/.zen
-TMP="./temp"
+TMP="$CONFIG_HOME/temp"
 
 mkdir -p "$FIREFOX_HOME"
 mkdir -p "$HOME/.dots"
