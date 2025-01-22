@@ -559,7 +559,9 @@ while [ "$#" -gt 0 ]; do
     clear_old_zen_configs "code"
     # clear_old_zen_configs "coding"
     # clear_old_zen_configs "default"
+    clear_old_zen_configs "debug"
     clear_old_zen_configs "dev"
+    clear_old_zen_configs "jellyfin"
     clear_old_zen_configs "main"
     clear_old_zen_configs "rec"
     clear_old_zen_configs "rgt"
@@ -577,7 +579,9 @@ while [ "$#" -gt 0 ]; do
   -zen-all)
     config_zen "code" "coding" &&
       # config_zen "default" "coding" &&
+      config_zen "debug" "coding" &&
       config_zen "dev" &&
+      config_zen "jellyfin" "rec" &&
       config_zen "main" &&
       config_zen "rec" &&
       config_zen "rgt" &&
