@@ -218,50 +218,50 @@ config_profile() {
 
   if [ "$profile_exists" = false ]; then
     echo "Profile '$profile' does not exist."
-    exit 1
   fi
 
   if [ -z "$profile" ]; then
     echo "Profile '$profile' not found... Exiting..."
-    exit 1
   fi
 
-  config="$3"
-  ff_ultima="$4"
+  if [[ "$profile_exists" = true && -n "$profile" ]]; then
+    config="$3"
+    ff_ultima="$4"
 
-  for i in "${configs[@]}"; do
-    if [ "$profile" == "$i" ]; then
-      config="$i"
-      break
+    for i in "${configs[@]}"; do
+      if [ "$profile" == "$i" ]; then
+        config="$i"
+        break
+      fi
+    done
+
+    if [ -z "$config" ]; then
+      printf "Config not specified... Do you want to use default config (coding)? [y/n] "
+      read -r ans
+      if [ "$ans" == "y" ]; then
+        config="coding"
+        echo "Using default config: $config"
+      else
+        echo "Exiting..."
+        exit 1
+      fi
     fi
-  done
 
-  if [ -z "$config" ]; then
-    printf "Config not specified... Do you want to use default config (coding)? [y/n] "
-    read -r ans
-    if [ "$ans" == "y" ]; then
-      config="coding"
-      echo "Using default config: $config"
-    else
-      echo "Exiting..."
-      exit 1
-    fi
-  fi
-
-  for i in "${configs[@]}"; do
-    if [ "$config" == "$i" ]; then
-      echo "Using config: $config"
-      backup_profile_history "$flav" "$profile"
-      if [ "$flav" == "zen" ]; then
-        setup_zen "$profile" "$config" "$ff_ultima"
+    for i in "${configs[@]}"; do
+      if [ "$config" == "$i" ]; then
+        echo "Using config: $config"
+        backup_profile_history "$flav" "$profile"
+        if [ "$flav" == "zen" ]; then
+          setup_zen "$profile" "$config" "$ff_ultima"
+          return
+        fi
+        setup_firefox "$profile" "$config" "$ff_ultima"
         return
       fi
-      setup_firefox "$profile" "$config" "$ff_ultima"
-      return
-    fi
-  done
+    done
 
-  echo "Invalid config: $config"
+    echo "Invalid config: $config"
+  fi
 }
 
 get_profiles() {
