@@ -1,3 +1,6 @@
+// Firefox preferences
+user_pref("browser.urlbar.suggest.topsites", true); // When false the newtab feature (<C-t> for search popup does not work)
+// Zen preferences
 user_pref("zen.theme.accent-color", "#1d7c78");
 user_pref("zen.view.sidebar-expanded", false);
 user_pref("zen.view.compact.hide-toolbar", false);
