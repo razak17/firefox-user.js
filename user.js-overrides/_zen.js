@@ -2,7 +2,7 @@
 user_pref("browser.urlbar.suggest.topsites", true); // When false the newtab feature (<C-t> for search popup does not work)
 // Zen preferences
 user_pref("zen.theme.accent-color", "#1d7c78");
-user_pref("zen.view.sidebar-expanded", false);
+// user_pref("zen.view.sidebar-expanded", false);
 user_pref("zen.view.compact.hide-toolbar", false);
 user_pref("zen.view.sidebar-expanded", true);
 user_pref("zen.workspaces.show-workspace-indicator", false);
@@ -18,3 +18,5 @@ user_pref("zen.view.experimental-no-window-controls", true); // remove animation
 user_pref("zen.keyboard.shortcuts", "{\"zenSplitViewGrid\":{\"ctrl\":true,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\"G\"},\"zenSplitViewVertical\":{\"ctrl\":true,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\"V\"},\"zenSplitViewHorizontal\":{\"ctrl\":true,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\"H\"},\"zenSplitViewClose\":{\"ctrl\":true,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\"U\"},\"zenChangeWorkspace\":{\"ctrl\":true,\"alt\":false,\"shift\":true,\"meta\":false,\"key\":\"E\"},\"zenToggleCompactMode\":{\"ctrl\":false,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\";\"},\"zenToggleCompactModeSidebar\":{\"ctrl\":true,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\"S\"},\"zenToggleCompactModeToolbar\":{\"ctrl\":true,\"alt\":true,\"shift\":false,\"meta\":false,\"key\":\"T\"},\"zenToggleWebPanels\":{\"ctrl\":true,\"alt\":false,\"shift\":true,\"meta\":false,\"key\":\"P\"}}");
 user_pref("zen.urlbar.replace-newtab", false); // don't replace new tab
 user_pref("zen.view.show-newtab-button-top", false); // show opened new tab at the bottom (not at the top)
+user_pref("zen.welcome-screen.seen", true);
+user_pref("zen.welcomeScreen.seen", true);
