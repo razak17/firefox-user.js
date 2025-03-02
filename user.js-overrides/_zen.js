@@ -1,5 +1,6 @@
 // Firefox preferences
 user_pref("browser.urlbar.suggest.topsites", true); // When false the newtab feature (<C-t> for search popup does not work)
+user_pref("browser.tabs.hoverPreview.enabled", true); // Enable tab hover preview
 // Zen preferences
 user_pref("zen.theme.accent-color", "#1d7c78");
 // user_pref("zen.view.sidebar-expanded", false);
