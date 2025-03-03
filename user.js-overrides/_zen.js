@@ -21,3 +21,4 @@ user_pref("zen.urlbar.replace-newtab", false); // don't replace new tab
 user_pref("zen.view.show-newtab-button-top", false); // show opened new tab at the bottom (not at the top)
 user_pref("zen.welcome-screen.seen", true);
 user_pref("zen.welcomeScreen.seen", true);
+user_pref("zen.view.compact.toolbar-flash-popup", false); // Briefly make the toolbar popup when switching or opening new tabs in compact mode
