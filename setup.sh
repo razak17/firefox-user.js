@@ -400,6 +400,12 @@ create_zen_profile() {
   printf "Profile created: %s" "$profile"
 }
 
+delete_zen_profile() {
+  profile="$1"
+  sudo rm -r "$ZEN_HOME/$profile"
+  printf "Profile deleted: %s" "$profile"
+}
+
 clear_old_zen_configs() {
   profile="$1"
 
@@ -444,6 +450,15 @@ while [ "$#" -gt 0 ]; do
     fi
     shift
     create_zen_profile "$profile"
+    ;;
+  -zen-del)
+    profile=$1
+    if [ -z "$profile" ]; then
+      echo "missing profile"
+      exit 1
+    fi
+    shift
+    delete_zen_profile "$profile"
     ;;
   -zen-p)
     profile=$1
