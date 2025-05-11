@@ -362,13 +362,24 @@ setup_zen() {
 
   profile="$1"
   config="$2"
-  ff_ultima="$3"
 
   dir="$ZEN_HOME"
 
   mkdir -p "$dir/$profile"
 
-  user_js_overrides_setup "zen" "$dir" "$profile" "$config" "$ff_ultima"
+  user_js_overrides_setup "zen" "$dir" "$profile" "$config"
+
+  # Custom css
+  if [ -e "$dir/$profile/chrome/userChrome.css" ]; then
+    backup_dir="$dir/$profile/chrome-$(date +%F_%H%M%S_%N)"
+    mkdir -p "$backup_dir"
+    mv "$dir/$profile/chrome/userChrome.css" "$backup_dir"
+  fi
+  mkdir -p "$dir/$profile/chrome"
+  pushd "$CONFIG_HOME" || exit
+  if [ -e "$CONFIG_HOME/chrome/zen/userChrome.css" ]; then
+    cp -f "$CONFIG_HOME/chrome/zen/userChrome.css" "$dir/$profile/chrome"
+  fi
 }
 
 config_zen() {
