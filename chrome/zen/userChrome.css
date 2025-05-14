@@ -4,3 +4,7 @@
     display: none !important;
   }
 }
+
+#zen-toast-container {
+  display: none !important;
+}
