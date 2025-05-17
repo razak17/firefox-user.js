@@ -97,20 +97,65 @@ backup_profile_history() {
 
 # Backup (or remove) an old chrome folder if exists
 backup_chrome_css() {
-  local base_dir="$1"
+  local flavor="$1"
   local profile="$2"
-  local profile_path="$base_dir/$profile"
-  if [ -d "$profile_path/chrome" ]; then
-    mv "$profile_path/chrome" "$profile_path/chrome-$(date +%F_%H%M%S_%N)"
+
+  # Determine the base directory based on the flavor.
+  local base_dir
+  base_dir=$(get_base_dir "$flavor")
+  local profile_chrome_dir="$base_dir/$profile/chrome"
+
+  # Check if the chrome directory exists.
+  if [ ! -d "$profile_chrome_dir" ]; then
+    echo "No chrome folder found for $profile"
+    return
+  fi
+
+  local backup_timestamp
+  backup_timestamp=$(date +%F_%H%M%S_%N)
+
+  if [ "$flavor" == "firefox" ]; then
+    # Backup the entire chrome directory by renaming it.
+    local backup_chrome_dir="$base_dir/$profile/chrome-$backup_timestamp"
+
+    if mv "$profile_chrome_dir" "$backup_chrome_dir"; then
+      printf "Successfully backed up '%s' to '%s'\n" "$profile_chrome_dir" "$backup_chrome_dir"
+    else
+      printf "Error: Failed to backup '%s' to '%s'\n" "$profile_chrome_dir" "$backup_chrome_dir"
+      return 1
+    fi
+  elif [ "$flavor" == "zen" ]; then
+    # Backup userChrome.css if it exists.
+    local user_chrome_css="$profile_chrome_dir/userChrome.css"
+    if [ -e "$user_chrome_css" ]; then
+      local backup_dir="$base_dir/$profile/chrome-$backup_timestamp"
+      mkdir -p "$backup_dir"
+      if mv "$user_chrome_css" "$backup_dir"; then
+        printf "Successfully backed up '%s' to '%s'\n" "$user_chrome_css" "$backup_dir"
+      else
+        printf "Error: Failed to backup '%s' to '%s'\n" "$user_chrome_css" "$backup_dir"
+        return 1 # Indicate failure
+      fi
+    fi
+    mkdir -p "$base_dir/$profile/chrome"
+    local config_chrome_zen_css="$CONFIG_HOME/chrome/zen/userChrome.css"
+    if [ -e "$config_chrome_zen_css" ]; then
+      cp -f "$config_chrome_zen_css" "$profile_chrome_dir"
+    fi
+  else
+    printf "No chrome setup for flavor '%s'\n" "$flavor"
   fi
 }
 
 chrome_css_setup() {
-  local base_dir="$1"
+  local flavor="$1"
   local profile="$2"
   local config="$3"
   local ff_ultima="$4"
-  backup_chrome_css "$base_dir" "$profile"
+  local base_dir
+  base_dir=$(get_base_dir "$flavor")
+
+  backup_chrome_css "$flavor" "$profile"
   mkdir -p "$base_dir/$profile/chrome"
   pushd "$CONFIG_HOME" >/dev/null || exit
   if [ -n "$ff_ultima" ]; then
@@ -251,11 +296,7 @@ config_profile() {
 
   backup_profile_history "$flavor" "$profile"
 
-  # Firefox has an extra chrome CSS step (floorp and zen do not)
-  if [ "$flavor" == "firefox" ]; then
-    chrome_css_setup "$target_dir" "$profile" "$config" "$ff_ultima"
-  fi
-
+  chrome_css_setup "$flavor" "$profile" "$config" "$ff_ultima"
   user_js_overrides_setup "$flavor" "$target_dir" "$profile" "$config" "$ff_ultima"
 }
 
@@ -298,7 +339,8 @@ get_profiles() {
   local extra="$2"
   pushd "$base_dir" >/dev/null || exit
   local options
-  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v -E '^(\.|\.\.|firefox-|zen-|floorp-)$')
+  # options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v -E '^(\.|\.\.|firefox-|zen-|floorp-)$')
+  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v '^.$' | grep -v '^..$' | grep -v '^firefox-')
   local choice
   choice=$(echo "$options" | sort | dmenu -l 10 -p 'Choose :')
   if [ -z "$choice" ]; then
@@ -499,14 +541,13 @@ while [ "$#" -gt 0 ]; do
     clear_profile_configs "zen" "$profile"
     ;;
   -zen-clear-all)
-    for prof in code coding default dev debug jellyfin main rec rgt; do
+    for prof in coding default dev debug jellyfin main rec rgt; do
       clear_old_configs "$ZEN_HOME" "$prof"
     done
     echo "All Zen profiles cleared!"
     ;;
   -zen-all)
-    config_profile "zen" "code" "coding" &&
-      config_profile "zen" "default" "coding" &&
+    config_profile "zen" "default" "coding" &&
       config_profile "zen" "debug" "coding" &&
       config_profile "zen" "dev" &&
       config_profile "zen" "jellyfin" "rec" &&
@@ -559,8 +600,12 @@ while [ "$#" -gt 0 ]; do
     echo "All Floorp profiles cleared!"
     ;;
   -floorp-all)
-    for prof in coding default dev main rec rgt social; do
-      config_profile "floorp" "$prof" "$prof"
+    for prof in coding default; do
+      if [ "$prof" == "default" ]; then
+        config_profile "floorp" "$prof" "coding"
+      else
+        config_profile "floorp" "$prof" "$prof"
+      fi
     done
     echo "All Floorp profiles completed!"
     ;;
