@@ -156,19 +156,22 @@ chrome_css_setup() {
   base_dir=$(get_base_dir "$flavor")
 
   backup_chrome_css "$flavor" "$profile"
-  mkdir -p "$base_dir/$profile/chrome"
-  pushd "$CONFIG_HOME" >/dev/null || exit
-  if [ -n "$ff_ultima" ]; then
-    cp -R ./FF-ULTIMA/theme ./FF-ULTIMA/userChrome.css ./FF-ULTIMA/userContent.css "$FIREFOX_HOME/$profile/chrome"
+
+  if [ "$flavor" == "firefox" ]; then
+    mkdir -p "$base_dir/$profile/chrome"
+    pushd "$CONFIG_HOME" >/dev/null || exit
+    if [ -n "$ff_ultima" ]; then
+      cp -R ./FF-ULTIMA/theme ./FF-ULTIMA/userChrome.css ./FF-ULTIMA/userContent.css "$FIREFOX_HOME/$profile/chrome"
+      popd >/dev/null || exit
+      return
+    fi
+    if [ "$config" == "rec" ]; then
+      cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$base_dir/$profile/chrome"
+    else
+      cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$base_dir/$profile/chrome"
+    fi
     popd >/dev/null || exit
-    return
   fi
-  if [ "$config" == "rec" ]; then
-    cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$base_dir/$profile/chrome"
-  else
-    cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$base_dir/$profile/chrome"
-  fi
-  popd >/dev/null || exit
 }
 
 ff_ultima_overrides_setup() {
