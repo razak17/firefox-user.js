@@ -29,107 +29,96 @@ install_essentials() {
 
   cd "$CONFIG_HOME" || exit
 
-  if [[ -n "$update" && "$update" == "update" ]]; then
-    # cleaner
+  # For update, remove old temporary files first
+  if [[ "$update" == "update" ]]; then
     rm -rf "${TMP}"
   fi
 
   mkdir -p "$TMP"
 
-  if [ ! -e "$TMP/user.js" ]; then
-    if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js" -o "${TMP}/user.js"; then
-      echo "User.js file downloaded"
+  local files=("user.js" "updater.sh" "prefsCleaner.sh")
+  local base_urls=(
+    "https://raw.githubusercontent.com/arkenfox/user.js/master/user.js"
+    "https://raw.githubusercontent.com/arkenfox/user.js/master/updater.sh"
+    "https://raw.githubusercontent.com/arkenfox/user.js/master/prefsCleaner.sh"
+  )
+  for i in "${!files[@]}"; do
+    if [ ! -e "$TMP/${files[$i]}" ]; then
+      if curl -s -L "${base_urls[$i]}" -o "$TMP/${files[$i]}"; then
+        echo "${files[$i]} downloaded"
+      fi
     fi
-  fi
+  done
 
-  if [ ! -e "$TMP/updater.sh" ]; then
-    if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/updater.sh" -o "${TMP}/updater.sh"; then
-      echo "Update script downloaded"
+  # Verify all files exist
+  for file in "${files[@]}"; do
+    if [ ! -e "$TMP/$file" ]; then
+      echo "Error downloading script: $file"
+      exit 1
     fi
-  fi
-
-  if [ ! -e "$TMP/prefsCleaner.sh" ]; then
-    if curl -s -L "https://raw.githubusercontent.com/arkenfox/user.js/master/prefsCleaner.sh" -o "${TMP}/prefsCleaner.sh"; then
-      echo "prefsCleaner script downloaded"
-    fi
-  fi
-
-  if [ ! -e "$TMP/updater.sh" ] || [ ! -e "$TMP/prefsCleaner.sh" ] || [ ! -e "$TMP/user.js" ]; then
-    echo "Error downloading scripts"
-    exit 1
-  fi
+  done
 }
 
 clear_old_configs() {
-  dir="$1"
-  profile="$2"
-
-  cd "$dir" || exit
-
-  if [ -d "$dir/$profile" ]; then
-    cd "$dir/$profile" || exit
-
-    if ls -d chrome-* 1>/dev/null 2>&1; then
-      rm -r chrome-*
-    fi
-    if ls -d user.js-overrides-* 1>/dev/null 2>&1; then
-      rm -r user.js-overrides-*
-    fi
+  local base_dir="$1"
+  local profile="$2"
+  local path="$base_dir/$profile"
+  if [ -d "$path" ]; then
+    pushd "$path" >/dev/null || exit
+    rm -rf chrome-* user.js-overrides-*
+    popd >/dev/null || exit
   else
     echo "Profile '$profile' not found."
   fi
 }
 
 backup_profile_history() {
-  flav="$1"
-  profile="$2"
-
-  dir="$FIREFOX_HOME"
-
+  local flav="$1"
+  local profile="$2"
+  local base_dir
   if [ "$flav" == "zen" ]; then
-    dir="$ZEN_HOME"
+    base_dir="$ZEN_HOME"
+  else
+    base_dir="$FIREFOX_HOME"
   fi
 
-  backup_dir=""$HOME/.dots/${flav}_backups""
-  mkdir -p "$backup_dir"
-  if [ -f "$dir/$profile/places.sqlite" ]; then
-    mkdir -p "$backup_dir/$profile"
-    time=$(date +%F_%H%M%S_%N)
-    cp "$dir/$profile/places.sqlite" "$backup_dir/$profile/places-$time.sqlite"
+  local backup_dir="$DOTS_HOME/${flav}_backups"
+  mkdir -p "$backup_dir/$profile"
+  if [ -f "$base_dir/$profile/places.sqlite" ]; then
+    local time_stamp
+    time_stamp=$(date +%F_%H%M%S_%N)
+    cp "$base_dir/$profile/places.sqlite" "$backup_dir/$profile/places-$time_stamp.sqlite"
   fi
 }
 
 backup_chrome_css() {
-  dir="$1"
-  profile="$2"
-
-  if [ -d "$dir/$profile/chrome" ]; then
-    mv "$dir/$profile/chrome" "$dir/$profile/chrome-$(date +%F_%H%M%S_%N)"
+  local base_dir="$1"
+  local profile="$2"
+  local profile_path="$base_dir/$profile"
+  if [ -d "$profile_path/chrome" ]; then
+    mv "$profile_path/chrome" "$profile_path/chrome-$(date +%F_%H%M%S_%N)"
   fi
 }
 
 chrome_css_setup() {
-  dir="$1"
-  profile="$2"
-  config="$3"
-  ff_ultima="$4"
-
-  backup_chrome_css "$dir" "$profile"
-
-  mkdir -p "$dir/$profile/chrome"
-
-  pushd "$CONFIG_HOME" || exit
-
+  local base_dir="$1"
+  local profile="$2"
+  local config="$3"
+  local ff_ultima="$4"
+  backup_chrome_css "$base_dir" "$profile"
+  mkdir -p "$base_dir/$profile/chrome"
+  pushd "$CONFIG_HOME" >/dev/null || exit
   if [ -n "$ff_ultima" ]; then
     cp -R ./FF-ULTIMA/theme ./FF-ULTIMA/userChrome.css ./FF-ULTIMA/userContent.css "$FIREFOX_HOME/$profile/chrome"
+    popd >/dev/null || exit
     return
   fi
-
   if [ "$config" == "rec" ]; then
-    cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$dir/$profile/chrome"
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$base_dir/$profile/chrome"
   else
-    cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$dir/$profile/chrome"
+    cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$base_dir/$profile/chrome"
   fi
+  popd >/dev/null || exit
 }
 
 backup_user_js_overrides() {
