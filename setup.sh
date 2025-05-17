@@ -121,15 +121,6 @@ chrome_css_setup() {
   popd >/dev/null || exit
 }
 
-backup_user_js_overrides() {
-  dir="$1"
-  profile="$2"
-
-  if [ -d "$dir/$profile/user.js-overrides" ]; then
-    mv "$dir/$profile/user.js-overrides" "$dir/$profile/user.js-overrides-$(date +%F_%H%M%S_%N)"
-  fi
-}
-
 ff_ultima_overrides_setup() {
   pushd "$CONFIG_HOME" || exit
   cp ./FF-ULTIMA/user.js ./temp/_ffu_base.js
@@ -140,54 +131,59 @@ ff_ultima_overrides_setup() {
 }
 
 user_js_overrides_setup() {
-  flav="$1"
-  dir="$2"
-  profile="$3"
-  config="$4"
-  ff_ultima="$5"
+  local flavor="$1"   # "firefox" or "zen"
+  local base_dir="$2" # target directory (FIREFOX_HOME or ZEN_HOME)
+  local profile="$3"
+  local config="$4"
+  local ff_ultima="$5"
+  local overrides_target="$base_dir/$profile/user.js-overrides"
 
-  backup_user_js_overrides "$dir" "$profile"
-
-  mkdir -p "$dir/$profile/user.js-overrides"
+  # Backup old overrides if exists & re-create target folder
+  [ -d "$overrides_target" ] && mv "$overrides_target" "${overrides_target}-$(date +%F_%H%M%S_%N)"
+  mkdir -p "$overrides_target"
 
   pushd "$CONFIG_HOME" || exit
 
-  if [ -e "./user.js-overrides/_ffu_base.js" ]; then
-    rm ./user.js-overrides/_ffu_base.js
-  fi
+  # Remove temporary file if found
+  [ -e "./user.js-overrides/_ffu_base.js" ] && rm ./user.js-overrides/_ffu_base.js
 
+  # For FF Ultima, merge the base override files
   if [ -n "$ff_ultima" ]; then
     ff_ultima_overrides_setup
   else
-    cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$dir/$profile/user.js-overrides"
+    cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$base_dir/$profile/user.js-overrides"
   fi
 
-  if [ "$flav" == "zen" ]; then
-    cp -R ./user.js-overrides/_zen.js "$dir/$profile/user.js-overrides"
+  # For "zen" flavor add our own zen override if exists.
+  if [ "$flavor" == "zen" ] && [ -e "./user.js-overrides/_zen.js" ]; then
+    cp -R ./user.js-overrides/_zen.js "$base_dir/$profile/user.js-overrides"
   fi
 
+  # Copy the essential files into the profile directory
   pushd "$TMP" || exit
+  cp -R user.js updater.sh prefsCleaner.sh "$base_dir/$profile"
+  popd >/dev/null || exit
 
-  cp -R user.js updater.sh prefsCleaner.sh "$dir/$profile"
-
-  pushd "$dir/$profile" || exit
+  # Run updater
+  pushd "$base_dir/$profile" >/dev/null || exit
   sh ./updater.sh -d -s -o user.js-overrides
-  cd "$CONFIG_HOME" || exit
-  if [ -e "./user.js-overrides/_ffu_base.js" ]; then
-    rm ./user.js-overrides/_ffu_base.js
-  fi
-  echo "Profile '$profile' Completed!"
+  popd >/dev/null || exit
+
+  # Clean up temporary file if present
+  [ -e "$CONFIG_HOME/user.js-overrides/_ffu_base.js" ] && rm "$CONFIG_HOME/user.js-overrides/_ffu_base.js"
+  echo "Profile '$profile' configuration complete!"
+  popd >/dev/nul || exitl
 }
 
 config_profile() {
   configs=("coding" "dev" "main" "rec" "rgt")
 
-  flav="$1"
-  profile="$2"
+  local flavor="$1"
+  local profile="$2"
 
-  if [ "$flav" == "firefox" ]; then
+  if [ "$flavor" == "firefox" ]; then
     cd "$FIREFOX_HOME" || exit
-  elif [ "$flav" == "zen" ]; then
+  elif [ "$flavor" == "zen" ]; then
     cd "$ZEN_HOME" || exit
   else
     echo "Invalid flavor... Exiting..."
@@ -239,8 +235,8 @@ config_profile() {
     for i in "${configs[@]}"; do
       if [ "$config" == "$i" ]; then
         echo "Using config: $config"
-        backup_profile_history "$flav" "$profile"
-        if [ "$flav" == "zen" ]; then
+        backup_profile_history "$flavor" "$profile"
+        if [ "$flavor" == "zen" ]; then
           setup_zen "$profile" "$config" "$ff_ultima"
           return
         fi
