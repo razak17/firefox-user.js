@@ -181,46 +181,45 @@ ff_ultima_overrides_setup() {
   cat ./user.js-overrides/_ffu.js >>./temp/_ffu_base.js
   cp ./temp/_ffu_base.js ./user.js-overrides/_ffu_base.js
   cp -R ./user.js-overrides/_base.js ./user.js-overrides/_ffu_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
+  popd >/dev/null || exit
 }
 
 user_js_overrides_setup() {
-  local flavor="$1"   # "firefox", "zen", or "floorp"
-  local base_dir="$2" # target directory (FIREFOX_HOME, ZEN_HOME, or FLOORP_HOME)
-  local profile="$3"
-  local config="$4"
-  local ff_ultima="$5"
+  local flavor="$1" # "firefox", "zen", or "floorp"
+  local profile="$2"
+  local config="$3"
+  local ff_ultima="$4"
+  local base_dir
+  base_dir=$(get_base_dir "$flavor")
   local overrides_target="$base_dir/$profile/user.js-overrides"
+  local overrides_dir="$CONFIG_HOME/user.js-overrides"
 
   # Backup old overrides if exists & re-create target folder
   [ -d "$overrides_target" ] && mv "$overrides_target" "${overrides_target}-$(date +%F_%H%M%S_%N)"
   mkdir -p "$overrides_target"
 
-  pushd "$CONFIG_HOME" >/dev/null || exit
-
-  # Remove temporary file if found
-  [ -e "./user.js-overrides/_ffu_base.js" ] && rm ./user.js-overrides/_ffu_base.js
-
   # For FF Ultima, merge the base override files
   if [ -n "$ff_ultima" ]; then
+    # Remove temporary file if found
+    [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir"/_ffu_base.js
     ff_ultima_overrides_setup
   else
-    cp -R ./user.js-overrides/_base.js ./user.js-overrides/*-"$config"/* "$base_dir/$profile/user.js-overrides"
+    cp -R "$overrides_dir"/_base.js "$overrides_dir"/*-"$config"/* "$overrides_target"
   fi
 
   # For "zen" flavor add our own zen override if exists.
-  if [ "$flavor" == "zen" ] && [ -e "./user.js-overrides/_zen.js" ]; then
-    cp -R ./user.js-overrides/_zen.js "$base_dir/$profile/user.js-overrides"
+  if [ "$flavor" == "zen" ] && [ -e "$overrides_dir/_zen.js" ]; then
+    cp -R "$overrides_dir"/_zen.js "$overrides_target"
   fi
 
   # For "floorp" flavor add our own floorp override if exists.
-  if [ "$flavor" == "floorp" ] && [ -e "./user.js-overrides/_floorp.js" ]; then
-    cp -R ./user.js-overrides/_floorp.js "$base_dir/$profile/user.js-overrides"
+  if [ "$flavor" == "floorp" ] && [ -e "$overrides_dir/_floorp.js" ]; then
+    cp -R "$overrides_dir"/_floorp.js "$overrides_target"
   fi
 
   # Copy the essential files into the profile directory
-  pushd "$TMP" || exit
+  pushd "$TMP" >/dev/null || exit
   cp -R user.js updater.sh prefsCleaner.sh "$base_dir/$profile"
-  popd >/dev/null || exit
 
   # Run updater
   pushd "$base_dir/$profile" >/dev/null || exit
@@ -300,7 +299,7 @@ config_profile() {
   backup_profile_history "$flavor" "$profile"
 
   chrome_css_setup "$flavor" "$profile" "$config" "$ff_ultima"
-  user_js_overrides_setup "$flavor" "$target_dir" "$profile" "$config" "$ff_ultima"
+  user_js_overrides_setup "$flavor" "$profile" "$config" "$ff_ultima"
 }
 
 # Generic functions for profile management (create, delete, clear, list)
