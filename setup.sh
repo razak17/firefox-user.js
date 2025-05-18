@@ -175,12 +175,13 @@ chrome_css_setup() {
 }
 
 ff_ultima_overrides_setup() {
+  local overrides_dir="$CONFIG_HOME/user.js-overrides"
+  [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir"/_ffu_base.js
   pushd "$CONFIG_HOME" >/dev/null || exit
   cp ./FF-ULTIMA/user.js ./temp/_ffu_base.js
   echo -e "\n" >>./temp/_ffu_base.js
   cat ./user.js-overrides/_ffu.js >>./temp/_ffu_base.js
   cp ./temp/_ffu_base.js ./user.js-overrides/_ffu_base.js
-  cp -R ./user.js-overrides/_base.js ./user.js-overrides/_ffu_base.js ./user.js-overrides/*-"$config"/* "$FIREFOX_HOME/$profile/user.js-overrides"
   popd >/dev/null || exit
 }
 
@@ -201,11 +202,10 @@ user_js_overrides_setup() {
   # For FF Ultima, merge the base override files
   if [ -n "$ff_ultima" ]; then
     # Remove temporary file if found
-    [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir"/_ffu_base.js
     ff_ultima_overrides_setup
-  else
-    cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
+    [ -e "$overrides_dir/_ffu_base.js" ] && cp -R "$overrides_dir"/_ffu_base.js "$overrides_target"
   fi
+  cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
 
   # For "zen" flavor add our own zen override if exists.
   if [ "$flavor" == "zen" ] && [ -e "$overrides_dir/_zen.js" ]; then
