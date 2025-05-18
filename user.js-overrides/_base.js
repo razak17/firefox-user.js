@@ -205,6 +205,7 @@ user_pref("browser.preferences.experimental", true);
 
 // disable firefox view
 user_pref("browser.tabs.firefox-view", false);
+user_pref("browser.firefox-view.feature-tour", "{\"screen\":\"\",\"complete\":true}");
 
  // install unsigned addons
 user_pref("xpinstall.signatures.required", false);
