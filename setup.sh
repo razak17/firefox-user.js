@@ -201,9 +201,9 @@ user_js_overrides_setup() {
 
   # For FF Ultima, merge the base override files
   if [ -n "$ff_ultima" ]; then
-    # Remove temporary file if found
     ff_ultima_overrides_setup
     [ -e "$overrides_dir/_ffu_base.js" ] && cp -R "$overrides_dir"/_ffu_base.js "$overrides_target"
+    [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir/_ffu_base.js"
   fi
   cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
 
@@ -226,10 +226,7 @@ user_js_overrides_setup() {
   sh ./updater.sh -d -s -o user.js-overrides
   popd >/dev/null || exit
 
-  # Clean up temporary file if present
-  [ -e "$CONFIG_HOME/user.js-overrides/_ffu_base.js" ] && rm "$CONFIG_HOME/user.js-overrides/_ffu_base.js"
   echo "Profile '$profile' configuration complete!"
-  popd >/dev/null || exit
 }
 
 # Determine the target base directory using flavor
@@ -297,7 +294,6 @@ config_profile() {
   [ -n "$valid_conf" ] && config="$valid_conf"
 
   backup_profile_history "$flavor" "$profile"
-
   chrome_css_setup "$flavor" "$profile" "$config" "$ff_ultima"
   user_js_overrides_setup "$flavor" "$profile" "$config" "$ff_ultima"
 }
