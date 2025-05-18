@@ -204,7 +204,7 @@ user_js_overrides_setup() {
     [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir"/_ffu_base.js
     ff_ultima_overrides_setup
   else
-    cp -R "$overrides_dir"/_base.js "$overrides_dir"/*-"$config"/* "$overrides_target"
+    cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
   fi
 
   # For "zen" flavor add our own zen override if exists.

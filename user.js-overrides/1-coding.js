@@ -1,9 +1,13 @@
 /***************************************************************************************************
-  MIXED CONTENT
+  MIXED CONTENT (Coding)
 ***************************************************************************************************/
 
 /*** [SECTION 2800]: SHUTDOWN & SANITIZING ***/
 user_pref("network.cookie.lifetimePolicy", 0);
+user_pref("extensions.webextensions.restrictedDomains", "");
+
+/*** [SECTION 4500]: RFP (RESIST FINGERPRINTING) **/
+user_pref("privacy.resistFingerprinting.letterboxing", false); // reduced screen size
 
 /*** [SECTION 1600]: HEADERS / REFERERS ***/
 user_pref("privacy.userContext.newTabContainerOnLeftClick.enabled", true);

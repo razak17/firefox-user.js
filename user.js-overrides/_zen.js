@@ -1,3 +1,6 @@
+/***************************************************************************************************
+  CUSTOM PREFS (Zen)
+***************************************************************************************************/
 // Firefox preferences
 user_pref("browser.urlbar.suggest.topsites", true); // When false the newtab feature (<C-t> for search popup does not work)
 user_pref("browser.tabs.hoverPreview.enabled", true); // Enable tab hover preview
