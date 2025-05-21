@@ -1,8 +1,7 @@
-/* Hide workspace indicator */
-@media not -moz-pref("zen.workspaces.show-workspace-indicator") {
-  #zen-current-workspace-indicator-container {
-    display: none !important;
-  }
+/* Hide workspace indicator (New Way) */
+.zen-current-workspace-indicator {
+  display: none !important;
+  /* background: red !important; */
 }
 
 #zen-toast-container {
