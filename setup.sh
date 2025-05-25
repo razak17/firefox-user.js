@@ -151,7 +151,6 @@ chrome_css_setup() {
   local flavor="$1"
   local profile="$2"
   local config="$3"
-  local ff_ultima="$4"
   local base_dir
   base_dir=$(get_base_dir "$flavor")
 
@@ -160,11 +159,6 @@ chrome_css_setup() {
   if [ "$flavor" == "firefox" ]; then
     mkdir -p "$base_dir/$profile/chrome"
     pushd "$CONFIG_HOME" >/dev/null || exit
-    if [ -n "$ff_ultima" ]; then
-      cp -R ./FF-ULTIMA/theme ./FF-ULTIMA/userChrome.css ./FF-ULTIMA/userContent.css "$FIREFOX_HOME/$profile/chrome"
-      popd >/dev/null || exit
-      return
-    fi
     if [ "$config" == "rec" ]; then
       cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$base_dir/$profile/chrome"
     else
@@ -189,7 +183,6 @@ user_js_overrides_setup() {
   local flavor="$1" # "firefox", "zen", or "floorp"
   local profile="$2"
   local config="$3"
-  local ff_ultima="$4"
   local base_dir
   base_dir=$(get_base_dir "$flavor")
   local overrides_target="$base_dir/$profile/user.js-overrides"
@@ -200,11 +193,6 @@ user_js_overrides_setup() {
   mkdir -p "$overrides_target"
 
   # For FF Ultima, merge the base override files
-  if [ -n "$ff_ultima" ]; then
-    ff_ultima_overrides_setup
-    [ -e "$overrides_dir/_ffu_base.js" ] && cp -R "$overrides_dir"/_ffu_base.js "$overrides_target"
-    [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir/_ffu_base.js"
-  fi
   cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
 
   # For "zen" flavor add our own zen override if exists.
@@ -247,7 +235,6 @@ config_profile() {
   local flavor="$1" # "firefox", "zen", or "floorp"
   local profile="$2"
   local config="$3"
-  local ff_ultima="$4"
   local target_dir
   target_dir=$(get_base_dir "$flavor")
 
@@ -294,8 +281,8 @@ config_profile() {
   [ -n "$valid_conf" ] && config="$valid_conf"
 
   backup_profile_history "$flavor" "$profile"
-  chrome_css_setup "$flavor" "$profile" "$config" "$ff_ultima"
-  user_js_overrides_setup "$flavor" "$profile" "$config" "$ff_ultima"
+  chrome_css_setup "$flavor" "$profile" "$config"
+  user_js_overrides_setup "$flavor" "$profile" "$config"
 }
 
 # Generic functions for profile management (create, delete, clear, list)
@@ -387,7 +374,7 @@ print_help() {
   echo "  -new <profile>        : Create a new Firefox profile"
   echo "  -del <profile>        : Delete a Firefox profile"
   echo "  -profiles             : List all Firefox profiles"
-  echo "  -p <profile> <cfg> [ff_ultima]: Configure a Firefox profile"
+  echo "  -p <profile> <cfg>    : Configure a Firefox profile"
   echo "  -clear <profile>      : Clear old configs in a Firefox profile"
   echo "  -clear-all            : Clear old configs in all Firefox profiles"
   echo "  -backup <profile>     : Backup Firefox profile history"
@@ -397,7 +384,7 @@ print_help() {
   echo "  # Zen commands"
   echo "  -zen-new <profile>    : Create a new Zen profile"
   echo "  -zen-del <profile>    : Delete a Zen profile"
-  echo "  -zen-p <profile> <cfg> [ff_ultima]: Configure a Zen profile"
+  echo "  -zen-p <profile> <cfg>: Configure a Zen profile"
   echo "  -zen-profiles [extra] : List all Zen profiles"
   echo "  -zen-clear <profile>  : Clear old configs in a Zen profile"
   echo "  -zen-clear-all        : Clear old configs in all Zen profiles"
@@ -406,7 +393,7 @@ print_help() {
   echo "  # Floorp commands"
   echo "  -floorp-new <profile>        : Create a new Floorp profile"
   echo "  -floorp-del <profile>        : Delete a Floorp profile"
-  echo "  -floorp-p <profile> <cfg> [ff_ultima]: Configure a Floorp profile"
+  echo "  -floorp-p <profile> <cfg>    : Configure a Floorp profile"
   echo "  -floorp-profiles             : List all Floorp profiles"
   echo "  -floorp-clear <profile>      : Clear old configs in a Floorp profile"
   echo "  -floorp-clear-all            : Clear old configs in all Floorp profiles"
@@ -449,7 +436,6 @@ while [ "$#" -gt 0 ]; do
   -p)
     profile=$1
     config="$2"
-    ff_ultima="$3"
     [ -z "$profile" ] && {
       echo "missing profile"
       exit 1
@@ -459,8 +445,7 @@ while [ "$#" -gt 0 ]; do
       exit 1
     }
     shift 2
-    [ -n "$ff_ultima" ] && shift
-    config_profile "firefox" "$profile" "$config" "$ff_ultima"
+    config_profile "firefox" "$profile" "$config"
     ;;
   -coding | -def | -dev | -main | -rec | -rgt | -social)
     flag="${curr#-}"
@@ -517,7 +502,6 @@ while [ "$#" -gt 0 ]; do
   -zen-p)
     profile="$1"
     config="$2"
-    ff_ultima="$3"
     [ -z "$profile" ] && {
       echo "missing profile"
       exit 1
@@ -527,8 +511,7 @@ while [ "$#" -gt 0 ]; do
       exit 1
     }
     shift 2
-    [ -n "$ff_ultima" ] && shift
-    config_profile "zen" "$profile" "$config" "$ff_ultima"
+    config_profile "zen" "$profile" "$config"
     ;;
   -zen-profiles)
     get_profiles "$ZEN_HOME" "$1"
@@ -570,7 +553,6 @@ while [ "$#" -gt 0 ]; do
   -floorp-p)
     profile=$1
     config="$2"
-    ff_ultima="$3"
     [ -z "$profile" ] && {
       echo "missing profile"
       exit 1
@@ -580,8 +562,7 @@ while [ "$#" -gt 0 ]; do
       exit 1
     }
     shift 2
-    [ -n "$ff_ultima" ] && shift
-    config_profile "floorp" "$profile" "$config" "$ff_ultima"
+    config_profile "floorp" "$profile" "$config"
     ;;
   -floorp-profiles)
     get_profiles "$FLOORP_HOME"
