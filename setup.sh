@@ -168,17 +168,6 @@ chrome_css_setup() {
   fi
 }
 
-ff_ultima_overrides_setup() {
-  local overrides_dir="$CONFIG_HOME/user.js-overrides"
-  [ -e "$overrides_dir/_ffu_base.js" ] && rm "$overrides_dir"/_ffu_base.js
-  pushd "$CONFIG_HOME" >/dev/null || exit
-  cp ./FF-ULTIMA/user.js ./temp/_ffu_base.js
-  echo -e "\n" >>./temp/_ffu_base.js
-  cat ./user.js-overrides/_ffu.js >>./temp/_ffu_base.js
-  cp ./temp/_ffu_base.js ./user.js-overrides/_ffu_base.js
-  popd >/dev/null || exit
-}
-
 user_js_overrides_setup() {
   local flavor="$1" # "firefox", "zen", or "floorp"
   local profile="$2"
@@ -192,7 +181,6 @@ user_js_overrides_setup() {
   [ -d "$overrides_target" ] && mv "$overrides_target" "${overrides_target}-$(date +%F_%H%M%S_%N)"
   mkdir -p "$overrides_target"
 
-  # For FF Ultima, merge the base override files
   cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
 
   # For "zen" flavor add our own zen override if exists.
