@@ -313,7 +313,7 @@ get_profiles() {
   pushd "$base_dir" >/dev/null || exit
   local options
   # options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v -E '^(\.|\.\.|firefox-|zen-|floorp-)$')
-  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v '^.$' | grep -v '^..$' | grep -v '^firefox-')
+  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v '^.$' | grep -v '^..$' | grep -v '^firefox-' | grep -v '^Profile Groups')
   local choice
   choice=$(echo "$options" | sort | dmenu -l 10 -p 'Choose :')
   if [ -z "$choice" ]; then
