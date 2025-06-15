@@ -134,13 +134,8 @@ backup_chrome_css() {
         printf "Successfully backed up '%s' to '%s'\n" "$user_chrome_css" "$backup_dir"
       else
         printf "Error: Failed to backup '%s' to '%s'\n" "$user_chrome_css" "$backup_dir"
-        return 1 # Indicate failure
+        return 1
       fi
-    fi
-    mkdir -p "$base_dir/$profile/chrome"
-    local config_chrome_zen_css="$CONFIG_HOME/chrome/zen/userChrome.css"
-    if [ -e "$config_chrome_zen_css" ]; then
-      cp -f "$config_chrome_zen_css" "$profile_chrome_dir"
     fi
   else
     printf "No chrome setup for flavor '%s'\n" "$flavor"
@@ -153,6 +148,7 @@ chrome_css_setup() {
   local config="$3"
   local base_dir
   base_dir=$(get_base_dir "$flavor")
+  local profile_chrome_dir="$base_dir/$profile/chrome"
 
   backup_chrome_css "$flavor" "$profile"
 
@@ -160,11 +156,18 @@ chrome_css_setup() {
     mkdir -p "$base_dir/$profile/chrome"
     pushd "$CONFIG_HOME" >/dev/null || exit
     if [ "$config" == "rec" ]; then
-      cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$base_dir/$profile/chrome"
+      cp -R ./chrome/ui ./chrome/content ./chrome/*-rec/* "$profile_chrome_dir"
     else
-      cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$base_dir/$profile/chrome"
+      cp -R ./chrome/ui ./chrome/content ./chrome/*-coding/* "$profile_chrome_dir"
     fi
     popd >/dev/null || exit
+  fi
+  if [ "$flavor" == "zen" ]; then
+    mkdir -p "$base_dir/$profile/chrome"
+    local config_chrome_zen_css="$CONFIG_HOME/chrome/zen/userChrome.css"
+    if [ -e "$config_chrome_zen_css" ]; then
+      cp -f "$config_chrome_zen_css" "$profile_chrome_dir"
+    fi
   fi
 }
 
