@@ -240,21 +240,11 @@ config_profile() {
     return
   fi
 
-  # Try using the profile name as config
-  if [ -z "$config" ]; then
-    for conf in "${configs[@]}"; do
-      if [ "$profile" == "$conf" ]; then
-        config="$conf"
-        break
-      fi
-    done
-  fi
-
   # If config is not provided, ask for default
   local configs=("coding" "dev" "main" "rec" "rgt")
   local valid_conf=""
   for conf in "${configs[@]}"; do
-    if [ "$profile" == "$conf" ]; then
+    if [ "$config" == "$conf" ]; then
       valid_conf="$conf"
       break
     fi
@@ -264,17 +254,20 @@ config_profile() {
     read -r answer
     if [ "$answer" == "y" ]; then
       config="coding"
-      echo "Using default config: coding"
     else
       echo "Exiting..."
       exit 1
     fi
-  else
-    echo "Using config: $config"
   fi
 
   # Quick check: if the user passed a matching config as profile name, use that.
-  [ -n "$valid_conf" ] && config="$valid_conf"
+  if [ -z "$valid_conf" ]; then
+    echo "Invalid config '$config'. Available configs are: ${configs[*]}"
+    echo "Exiting..."
+    exit 1
+  fi
+
+  echo "Using config: $config"
 
   backup_profile_history "$flavor" "$profile"
   chrome_css_setup "$flavor" "$profile" "$config"
