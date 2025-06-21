@@ -1,3 +1,7 @@
+/***************************************************************************************************
+  MIXED CONTENT (Base)
+***************************************************************************************************/
+
 // HOMEPAGE
 user_pref("browser.newtabpage.activity-stream.feeds.section.highlights", false);
 user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);

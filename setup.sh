@@ -7,6 +7,7 @@ FIREFOX_HOME="$HOME/.mozilla/firefox/profiles"
 FLOORP_HOME="$HOME/.floorp/profiles"
 ZEN_HOME="$HOME/.zen"
 TMP="$CONFIG_HOME/temp"
+BETTER_FOX="$CONFIG_HOME/better"
 CONFIGS=("coding" "dev" "main" "rec" "rgt" "fastfox")
 
 mkdir -p "$FIREFOX_HOME" "$DOTS_HOME" "$TMP" "$ZEN_HOME" "$FLOORP_HOME"
@@ -32,7 +33,7 @@ install_essentials() {
 
   # For update, remove old temporary files first
   if [[ "$update" == "update" ]]; then
-    rm -rf "${TMP}"
+    [ -e "$TMP" ] && rm -rf "${TMP}"
   fi
 
   mkdir -p "$TMP"
@@ -54,6 +55,49 @@ install_essentials() {
   # Verify all files exist
   for file in "${files[@]}"; do
     if [ ! -e "$TMP/$file" ]; then
+      echo "Error downloading script: $file"
+      exit 1
+    fi
+  done
+}
+
+install_betterfox_essentials() {
+  update="$1"
+
+  cd "$CONFIG_HOME" || exit
+
+  # For update, remove old temporary files first
+  if [[ "$update" == "update" ]]; then
+    [ -e "$BETTER_FOX" ] && rm -rf "${BETTER_FOX}"
+  fi
+
+  mkdir -p "$BETTER_FOX"
+
+  local files=(
+    "fastfox.js"
+    "securefox.js"
+    "peskyfox.js"
+    "smoothfox.js"
+    "user.js"
+  )
+  local base_urls=(
+    "https://raw.githubusercontent.com/yokoffing/Betterfox/refs/heads/main/Fastfox.js"
+    "https://raw.githubusercontent.com/yokoffing/Betterfox/refs/heads/main/Securefox.js"
+    "https://raw.githubusercontent.com/yokoffing/Betterfox/refs/heads/main/Peskyfox.js"
+    "https://raw.githubusercontent.com/yokoffing/Betterfox/refs/heads/main/Smoothfox.js"
+    "https://raw.githubusercontent.com/yokoffing/Betterfox/refs/heads/main/user.js"
+  )
+  for i in "${!files[@]}"; do
+    if [ ! -e "$BETTER_FOX/${files[$i]}" ]; then
+      if curl -s -L "${base_urls[$i]}" -o "$BETTER_FOX/${files[$i]}"; then
+        echo "${files[$i]} downloaded"
+      fi
+    fi
+  done
+
+  # Verify all files exist
+  for file in "${files[@]}"; do
+    if [ ! -e "$BETTER_FOX/$file" ]; then
       echo "Error downloading script: $file"
       exit 1
     fi
@@ -185,7 +229,11 @@ user_js_overrides_setup() {
   [ -d "$overrides_target" ] && mv "$overrides_target" "${overrides_target}-$(date +%F_%H%M%S_%N)"
   mkdir -p "$overrides_target"
 
-  cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
+  if [ "$config" == "fastfox" ]; then
+    cp -R "$overrides_dir"/*-"$config".js "$overrides_target"
+  else
+    cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
+  fi
 
   # For "zen" flavor add our own zen override if exists.
   if [ "$flavor" == "zen" ] && [ -e "$overrides_dir/_zen.js" ]; then
@@ -201,14 +249,26 @@ user_js_overrides_setup() {
   if [ ! -e "$TMP/user.js" ] || [ ! -e "$TMP/prefsCleaner.sh" ] || [ ! -e "$TMP/updater.sh" ]; then
     install_essentials
   fi
+  if [ "$config" == "fastfox" ] && [ ! -e "$BETTER_FOX"/"$config".js ]; then
+    install_betterfox_essentials
+  fi
 
   # Copy the essential files into the profile directory
+  if [ "$config" == "fastfox" ]; then
+    cp -R "$BETTER_FOX"/"$config".js "$base_dir/$profile"/user.js
+  else
+    cp -R "$TMP"/user.js "$base_dir/$profile"
+  fi
+
   pushd "$TMP" >/dev/null || exit
-  cp -R user.js updater.sh prefsCleaner.sh "$base_dir/$profile"
+  cp -R "$CONFIG_HOME"/updater.sh prefsCleaner.sh "$base_dir/$profile"
+  # cp -R updater.sh prefsCleaner.sh "$base_dir/$profile"
+  cp -R prefsCleaner.sh "$base_dir/$profile"
 
   # Run updater
   pushd "$base_dir/$profile" >/dev/null || exit
-  sh ./updater.sh -d -s -o user.js-overrides
+  # sh ./updater.sh -d -s -o user.js-overrides
+  sh ./updater.sh -o user.js-overrides
   popd >/dev/null || exit
 
   echo "Profile '$profile' configuration complete!"
@@ -404,7 +464,10 @@ while [ "$#" -gt 0 ]; do
     ln -s "$CONFIG_HOME/setup.sh" "$HOME/.local/bin/fuj"
     echo "Installed 'fuj' command"
     ;;
-  -upd) install_essentials update ;;
+  -upd)
+    install_essentials update
+    install_betterfox_essentials update
+    ;;
   #########################
   # Firefox commands
   -new)
