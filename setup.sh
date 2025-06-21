@@ -196,6 +196,11 @@ user_js_overrides_setup() {
     cp -R "$overrides_dir"/_floorp.js "$overrides_target"
   fi
 
+  # check if temp files exist
+  if [ ! -e "$TMP/user.js" ] || [ ! -e "$TMP/prefsCleaner.sh" ] || [ ! -e "$TMP/updater.sh" ]; then
+    install_essentials
+  fi
+
   # Copy the essential files into the profile directory
   pushd "$TMP" >/dev/null || exit
   cp -R user.js updater.sh prefsCleaner.sh "$base_dir/$profile"
@@ -298,7 +303,7 @@ delete_profile() {
   local profile="$2"
   local target_dir
   target_dir=$(get_base_dir "$flavor")
-  sudo rm -rf "$target_dir/$profile"
+  rm -rf "$target_dir/$profile:?"
   echo "Profile deleted: $profile"
 }
 
