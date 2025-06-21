@@ -455,6 +455,12 @@ while [ "$#" -gt 0 ]; do
   case "$curr" in
   --help | -h) print_help ;;
   -clone) clone_config ;;
+  -reinstall)
+    mkdir -p "$HOME/.local/bin"
+    [ -e "$HOME/.local/bin/fuj" ] && rm -f "$HOME/.local/bin/fuj"
+    ln -s "$CONFIG_HOME/setup.sh" "$HOME/.local/bin/fuj"
+    echo "Installed 'fuj' command"
+    ;;
   -install)
     mkdir -p "$HOME/.local/bin"
     if [ -e "$HOME/.local/bin/fuj" ]; then
