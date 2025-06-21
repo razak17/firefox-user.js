@@ -231,6 +231,7 @@ user_js_overrides_setup() {
 
   if [ "$config" == "fastfox" ]; then
     cp -R "$overrides_dir"/*-"$config".js "$overrides_target"
+    cp -R "$BETTER_FOX"/smoothfox.js "$overrides_target"
   else
     cp -R "$overrides_dir"/0-base.js "$overrides_dir"/*-"$config".js "$overrides_target"
   fi
