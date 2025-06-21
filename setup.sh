@@ -7,6 +7,7 @@ FIREFOX_HOME="$HOME/.mozilla/firefox/profiles"
 FLOORP_HOME="$HOME/.floorp/profiles"
 ZEN_HOME="$HOME/.zen"
 TMP="$CONFIG_HOME/temp"
+CONFIGS=("coding" "dev" "main" "rec" "rgt" "fastfox")
 
 mkdir -p "$FIREFOX_HOME" "$DOTS_HOME" "$TMP" "$ZEN_HOME" "$FLOORP_HOME"
 
@@ -226,8 +227,6 @@ get_base_dir() {
 }
 
 config_profile() {
-  configs=("coding" "dev" "main" "rec" "rgt")
-
   local flavor="$1" # "firefox", "zen", or "floorp"
   local profile="$2"
   local config="$3"
@@ -241,9 +240,8 @@ config_profile() {
   fi
 
   # If config is not provided, ask for default
-  local configs=("coding" "dev" "main" "rec" "rgt")
   local valid_conf=""
-  for conf in "${configs[@]}"; do
+  for conf in "${CONFIGS[@]}"; do
     if [ "$config" == "$conf" ]; then
       valid_conf="$conf"
       break
@@ -262,7 +260,7 @@ config_profile() {
 
   # Quick check: if the user passed a matching config as profile name, use that.
   if [ -z "$valid_conf" ]; then
-    echo "Invalid config '$config'. Available configs are: ${configs[*]}"
+    echo "Invalid config '$config'. Available configs are: ${CONFIGS[*]}"
     echo "Exiting..."
     exit 1
   fi
