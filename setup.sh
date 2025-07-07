@@ -8,7 +8,7 @@ FLOORP_HOME="$HOME/.floorp/profiles"
 ZEN_HOME="$HOME/.zen"
 TMP="$CONFIG_HOME/temp"
 BETTER_FOX="$CONFIG_HOME/better"
-CONFIGS=("coding" "dev" "main" "rec" "rgt" "fastfox")
+CONFIGS=("coding" "dev" "main" "rec" "work" "fastfox")
 
 mkdir -p "$FIREFOX_HOME" "$DOTS_HOME" "$TMP" "$ZEN_HOME" "$FLOORP_HOME"
 
@@ -504,7 +504,7 @@ while [ "$#" -gt 0 ]; do
     shift 2
     config_profile "firefox" "$profile" "$config"
     ;;
-  -coding | -def | -dev | -main | -rec | -rgt | -social)
+  -coding | -def | -dev | -main | -rec | -social)
     flag="${curr#-}"
     if [ "$flag" == "social" ]; then
       config="dev"
@@ -527,7 +527,7 @@ while [ "$#" -gt 0 ]; do
     backup_profile_history "firefox" "$profile"
     ;;
   -all)
-    for prof in coding default dev main rec rgt social; do
+    for prof in coding default dev main rec social; do
       if [ "$prof" == "social" ]; then
         config_profile "firefox" "$prof" "dev"
       elif [ "$prof" == "defalt" ]; then
@@ -539,7 +539,7 @@ while [ "$#" -gt 0 ]; do
     echo "All Firefox profiles completed!"
     ;;
   -clear-all)
-    for prof in coding default dev main rec rgt social; do
+    for prof in coding default dev main rec social; do
       clear_old_configs "$FIREFOX_HOME" "$prof"
     done
     echo "All Firefox profiles cleared!"
@@ -579,7 +579,7 @@ while [ "$#" -gt 0 ]; do
     clear_profile_configs "zen" "$profile"
     ;;
   -zen-clear-all)
-    for prof in coding default dev debug jellyfin main rec rgt; do
+    for prof in coding default dev debug jellyfin main rec; do
       clear_old_configs "$ZEN_HOME" "$prof"
     done
     echo "All Zen profiles cleared!"
@@ -591,7 +591,6 @@ while [ "$#" -gt 0 ]; do
       config_profile "zen" "jellyfin" "rec" &&
       config_profile "zen" "main" &&
       config_profile "zen" "rec" &&
-      config_profile "zen" "rgt" &&
       config_profile "zen" "social" "dev" &&
       echo "All Zen profiles completed!"
     ;;
@@ -630,7 +629,7 @@ while [ "$#" -gt 0 ]; do
     clear_profile_configs "floorp" "$profile"
     ;;
   -floorp-clear-all)
-    for prof in coding default dev main rec rgt social; do
+    for prof in coding default dev main rec social; do
       clear_old_configs "$FLOORP_HOME" "$prof"
     done
     echo "All Floorp profiles cleared!"
