@@ -4,6 +4,7 @@
 
 user_pref("browser.tabs.loadBookmarksInTabs", true); // open bookmarks in a new tab [FF57+]
 user_pref("browser.shell.checkDefaultBrowser", false);
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true); // [FF68+] allow userChrome/userContent
 user_pref("full-screen-api.ignore-widgets", true);
 user_pref("signon.rememberSignons", false);
 user_pref("browser.privatebrowsing.autostart", false);
