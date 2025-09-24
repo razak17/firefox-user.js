@@ -372,8 +372,8 @@ get_profiles() {
   local extra="$2"
   pushd "$base_dir" >/dev/null || exit
   local options
-  # options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v -E '^(\.|\.\.|firefox-|zen-|floorp-)$')
-  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v '^.$' | grep -v '^..$' | grep -v '^firefox-' | grep -v '^Profile Groups')
+  options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v -E '^(\.|\.\.|firefox-|zen-|floorp-|Crash Reports|Pending Pings|Profile Groups)$')
+    # options=$(find . -maxdepth 1 -type d -exec basename {} \; | grep -v '^.$' | grep -v '^..$' | grep -v '^firefox-' | grep -v '^Profile Groups' | grep -v '^Crash Reports$' | grep -v '^Pending Pings$')
   local choice
   choice=$(echo "$options" | sort | dmenu -l 10 -p 'Choose :')
   if [ -z "$choice" ]; then
