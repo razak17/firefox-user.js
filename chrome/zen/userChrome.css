@@ -1,9 +1,4 @@
-/* Hide workspace indicator (New Way) */
-.zen-current-workspace-indicator {
-  display: none !important;
-  /* background: red !important; */
-}
-
-#zen-toast-container {
-  display: none !important;
-}
+@import "loading_indicator_bouncing_line.css";
+@import "hide_workspace_indicator.css";
+/* @import "urlbar_container_color_border.css"; */
+/* @import "hide_toast_indicator.css"; */

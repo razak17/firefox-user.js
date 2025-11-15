@@ -1,0 +1,5 @@
+/* Hide workspace indicator (New Way) */
+.zen-current-workspace-indicator {
+  display: none !important;
+  /* background: red !important; */
+}
