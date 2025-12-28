@@ -581,10 +581,10 @@ while [ "$#" -gt 0 ]; do
   -zen-all)
     config_profile "zen" "default" "coding" &&
       config_profile "zen" "debug" "coding" &&
-      config_profile "zen" "dev" &&
+      config_profile "zen" "dev" "coding" &&
       config_profile "zen" "jellyfin" "rec" &&
-      config_profile "zen" "main" &&
-      config_profile "zen" "rec" &&
+      config_profile "zen" "main" "main" &&
+      config_profile "zen" "rec" "rec" &&
       config_profile "zen" "social" "dev" &&
       echo "All Zen profiles completed!"
     ;;
