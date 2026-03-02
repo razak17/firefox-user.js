@@ -23,3 +23,4 @@ user_pref("zen.view.show-newtab-button-top", false); // show opened new tab at t
 user_pref("zen.welcome-screen.seen", true);
 user_pref("zen.welcomeScreen.seen", true);
 user_pref("zen.view.compact.toolbar-flash-popup", false); // Briefly make the toolbar popup when switching or opening new tabs in compact mode
+user_pref("zen.view.show-clear-tabs-button", false); // don't show clear button
