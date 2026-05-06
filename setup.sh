@@ -349,7 +349,7 @@ delete_profile() {
   local profile="$2"
   local target_dir
   target_dir=$(get_base_dir "$flavor")
-  rm -rf "$target_dir/$profile:?"
+  rm -rf "$target_dir/$profile"
   echo "Profile deleted: $profile"
 }
 
