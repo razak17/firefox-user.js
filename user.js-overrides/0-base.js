@@ -113,12 +113,13 @@ user_pref("extensions.webextensions.restrictedDomains", "");
 
 /*** [SECTION 0700]: DNS / DoH / PROXY / SOCKS / IPv6 ***/
 user_pref("network.trr.mode", 3);
+// https://base.dns.mullvad.net/dns-query
 // https://dns.quad9.net/dns-query
 // https://doh-ch.blahdns.com/dns-query
 // https://cloudflare-dns.com/dns-query
 // https://doh.cleanbrowsing.org/doh/family-filter
-user_pref("network.trr.custom_uri", "https://dns.quad9.net/dns-query");
-user_pref("network.trr.uri", "https://dns.quad9.net/dns-query");
+user_pref("network.trr.custom_uri", "https://base.dns.mullvad.net/dns-query");
+user_pref("network.trr.uri", "https://base.dns.mullvad.net/dns-query");
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 
 // Disable firefox suggest (Manually)

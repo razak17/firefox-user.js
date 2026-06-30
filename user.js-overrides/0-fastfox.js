@@ -10,8 +10,8 @@ user_pref("signon.rememberSignons", false);
 user_pref("browser.privatebrowsing.autostart", false);
 user_pref("extensions.formautofill.addresses.usage.hasEntry", false);
 user_pref("network.trr.mode", 3);
-user_pref("network.trr.custom_uri", "https://dns.quad9.net/dns-query");
-user_pref("network.trr.uri", "https://dns.quad9.net/dns-query");
+user_pref("network.trr.custom_uri", "https://base.dns.mullvad.net/dns-query");
+user_pref("network.trr.uri", "https://base.dns.mullvad.net/dns-query");
 user_pref("network.dns.disableIPv6", false); // localhost:8000 not working
 user_pref("browser.vpn_promo.enabled", false);
 user_pref("browser.promo.focus.enabled", false);
